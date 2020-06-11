@@ -1,0 +1,42 @@
+{
+    "type": "test",
+    "start": "2019-03-07T19:53:13.320Z",
+    "_duration": 12,
+    "uid": "test-00-1",
+    "cid": "0-0",
+    "title": "should report fail",
+    "fullTitle": "Sample Suite 1 should report fail",
+    "output": [],
+    "state": "failed",
+    "end": "2019-03-07T19:53:13.332Z",
+    "steps": [
+        {
+            "order": 0,
+            "description": "Navigate to the home page",
+            "expectation": "Home page should load",
+            "actual": "The home page loaded",
+            "status": "Passed",
+            "screenshotPath": "results\\1.0.0\\step-generation\\Steps\\screenshots\\0.png"
+        },
+        {
+            "order": 1,
+            "description": "The title should be correct",
+            "expectation": "The title should be correct",
+            "actual": "The title was incorrect",
+            "status": "Failed",
+            "screenshotPath": "results\\1.0.0\\step-generation\\Steps\\screenshots\\1.png"
+        }
+    ],
+    "errors": [
+        {
+            "message": "This test failed",
+            "stack": "This is an error call stack",
+            "type": "Error"
+        }
+    ],
+    "error": {
+        "message": "This test failed",
+        "stack": "This is an error call stack",
+        "type": "Error"
+    }
+}

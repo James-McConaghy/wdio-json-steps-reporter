@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+npm-debug.log
+.vscode/
+build/
+screenshots/
+phantom.log
+yarn-error.log
+results/
