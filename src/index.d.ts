@@ -11,6 +11,7 @@ declare module "wdio-json-steps-reporter" {
     };
 
     function step(stepOptions: StepOptions, description: string, expectation: string, actual: string, tasks: Function): void;
-    module.export = step
+    
 
 }
+module.export = step

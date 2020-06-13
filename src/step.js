@@ -1,6 +1,5 @@
 module.exports = function step(stepOptions = { createLog: true, takeScreenshot: false }, description, expectation, actual, tasks) {
     const step = {
-        order: 0,
         description: stepOptions.customDescription || description,
         expectation: stepOptions.customExpectation || expectation,
         actual: "",

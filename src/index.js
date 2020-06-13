@@ -13,7 +13,12 @@ class Reporter extends WDIOReporter {
         options = Object.assign(options)
         super(options)
 
-        this.steps = []
+        this.beforeAllHooksArray = []
+        this.afterAllHooksArray = []
+
+        this.delegatedTest = undefined
+        this.delegatedStepsArray = undefined
+                
         this.outputDir = path.normalize(options.outputDir)
         this.specDir = path.normalize(options.outputDir)
         this.fileName = options.logFile
@@ -28,53 +33,100 @@ class Reporter extends WDIOReporter {
             const specName = runner.specs[0]            
             const folderName = specName.substring(specName.lastIndexOf(path.sep) + 1, specName.lastIndexOf("."))
             this.specDir = this.outputDir + path.sep + folderName
-            fsExtra.ensureDirSync(this.outputDir)
-            fsExtra.ensureDirSync(this.specDir)
+            this.screenshotPath = this.specDir + path.sep + "screenshots"
+            fsExtra.ensureDirSync(this.screenshotPath)  
+        }
+        
+    }
+
+    onHookStart(hook) {
+        hook.steps = []   
+        this.delegatedStepsArray = hook.steps
+        switch (hook.title) {
+        case "\"before all\" hook":
+            break
+        case "\"before each\" hook":
+            break
+        case "\"after each\" hook":
+            break
+        case "\"after all\" hook":
+            break
+        default:
+            break
         }
     }
 
-    onSuiteStart(suite) {
-        this.suiteDir = this.specDir + path.sep + suite.title
+    onHookEnd(hook) {
+        switch (hook.title) {
+        case "\"before all\" hook":
+            this.beforeAllHooksArray.push(hook)
+            hook.associatedTest = "*"  
+            break
+        case "\"before each\" hook":
+            hook.associatedTest = this.delegatedTest.title
+            this.delegatedStepsArray = this.delegatedTest.steps
+            break
+        case "\"after each\" hook":
+            hook.associatedTest = this.delegatedTest.title
+            this.delegatedStepsArray = this.delegatedTest.steps
+            break
+        case "\"after all\" hook":
+            hook.associatedTest = "*"  
+            this.afterAllHooksArray.push(hook)
+            break
+        default:
+            break
+        }
     }
 
-    onTestStart() {
-        this.steps = []
-        this.screenshotPath = this.suiteDir + path.sep + "screenshots"
-        fsExtra.ensureDirSync(this.screenshotPath)
+    onTestStart(test) {
+        test.steps = []
+        this.delegatedTest = test
+        this.delegatedStepsArray = this.delegatedTest.steps
     }
 
     onStepEvent(stepOptions, step) {
         if (stepOptions.createLog) {
-            step.order = this.steps.length
-            if(stepOptions.takeScreenshot) {
-                step.screenshotPath = this.screenshotPath + path.sep + step.order + ".png"
+            if (stepOptions.takeScreenshot) {
+                step.screenshotPath = this.screenshotPath + path.sep + Date.now() + ".png"
                 browser.saveScreenshot(step.screenshotPath)
             }
-            this.steps.push(step)
+            this.delegatedStepsArray.push(step)
+        }
+        if (step.error) {
+            throw step.error
         }
     }
 
-    onTestEnd(test) {
-        test.steps = this.steps
-    }
-
-    onRunnerEnd (runner) {
+    onRunnerEnd(runner) {
         const json = this.prepareJson(runner)
         this.write(JSON.stringify(json))
         fsExtra.moveSync(this.fileName, this.specDir + path.sep + "results.json", {overwrite: true})
     }
 
-    prepareJson (runner) {
+    prepareJson(runner) {
         let resultSet = initResultSet(runner)
 
         for (const specId of Object.keys(runner.specs)) {
             resultSet.specs.push(runner.specs[specId])
             for (const suiteKey of Object.keys(this.suites)) {
                 let suite = this.suites[suiteKey]
-                suite.path = suite.path ? suite.path : this.specDir + path.sep + suite.title
+
+                suite.path = suite.path ? suite.path : this.specDir + path.sep + suite.title             
                 suite.suites.forEach((childSuite) => {
                     childSuite.path = suite.path + path.sep + childSuite.title
+
+                    //Add before all hooks to each child suite if hook belongs to suite
+                    this.beforeAllHooksArray.filter(hook => suite.title === hook.parent).forEach(hook => {
+                        childSuite.hooks.unshift(hook)
+                    })
+
+                    //Add after all hooks to each child suite if hook belongs to suite
+                    this.afterAllHooksArray.filter(hook => suite.title === hook.parent).forEach(hook => {
+                        childSuite.hooks.push(hook)
+                    })
                 })
+
                 if (suite.tests.length > 0) {
                     let testSuite = {}
                     testSuite.name = suite.title
