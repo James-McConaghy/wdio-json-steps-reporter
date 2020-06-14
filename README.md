@@ -3,51 +3,8 @@
 > A WebdriverIO plugin. Report results in json format with steps and screenshot support.
 > This project was derived from the 'wdio-json-reporter' found [here](https://github.com/fijijavis/wdio-json-reporter)
 
-## Usage
 
-### Log a step
-Import the step function to be used during tests and page object actions
-* @param {StepOptions} stepOptions : The options, can be used to override the page object actions 
-* @param {string} description : The description explaining what is being done in the task.
-* @param {string} expectation : The expected result of the task.
-* @param {string} actual : The actual result if the task passes.
-* @param {Function} task : The actions to be completed to determine if the test step passes or fails
-```javascript
-import { step } from "wdio-json-steps-reporter"
-...
-
-it("should have the correct title", function() {
-    page.verifyPageTitle() //defaults = {createStep: true, takeScreenshot: false}
-    page.verifyPageTitle({createStep: false) // no log will be generated in the report, the tasks will still be executed
-    page.verifyPageTitle({takeScreenshot: true})
-    page.verifyPageTitle({customDescription: "Override the description", customExpectation: "Override the expectation"}))
-})
-
-
-verifyPageTitle(stepOptions?: StepOptions): void {
-    step(stepOptions, 
-        "Verify the page title is correct",
-        "The page title should be correct",
-        "The page title was correct", () => {
-        const title = browser.getTitle()
-        expect(title).to.equal("WebdriverIO · Next-gen browser and mobile automation test framework for Node.js")
-    })
-}
-```
-
-
-### Step Options
-The options, can be used to override any default page object actions steps that have been created. Defaults = {createStep: true, takeScreenshot: false}.
-```javascript
-    type StepOptions = {
-        createLog: boolean;
-        takeScreenshot: boolean | WebdriverIO.Element;
-        customDescription?: string;
-        customExpectation?: string;
-        customActual?: string;
-    };
-```
-
+## Setup
 
 ### Installation
 
@@ -86,6 +43,58 @@ when utilizing the report dashboard to get the full benefits of it's features
 onComplete: function(exitCode, config, capabilities, results) {
     StepsReporter.mergeResults(`./results/${version}`, `${version}.json`)
 }
+```
+
+
+## Usage
+
+### Log a step
+Import the step function to be used during tests and page object actions
+* @param {StepOptions} stepOptions : The options, can be used to override the page object actions 
+* @param {string} description : The description explaining what is being done in the task.
+* @param {string} expectation : The expected result of the task.
+* @param {string} actual : The actual result if the task passes.
+* @param {Function} task : The actions to be completed to determine if the test step passes or fails
+```javascript
+import { step } from "wdio-json-steps-reporter"
+...
+
+before(function () {
+    step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
+        browser.url("https://webdriver.io")
+        page.waitUntilLoaded()
+    })
+})
+
+it("should have the correct title", function() {
+    page.verifyPageTitle() //defaults = {createStep: true, takeScreenshot: false}
+    page.verifyPageTitle({createStep: false) // no log will be generated in the report, the tasks will still be executed
+    page.verifyPageTitle({takeScreenshot: true})
+    page.verifyPageTitle({customDescription: "Override the description", customExpectation: "Override the expectation"}))
+})
+
+
+verifyPageTitle(stepOptions?: StepOptions): void {
+    step(stepOptions, 
+        "Verify the page title is correct",
+        "The page title should be correct",
+        "The page title was correct", () => {
+        const title = browser.getTitle()
+        expect(title).to.equal("WebdriverIO · Next-gen browser and mobile automation test framework for Node.js")
+    })
+}
+```
+
+### Step Options
+The options, can be used to override any default page object actions steps that have been created. Defaults = {createStep: true, takeScreenshot: false}.
+```javascript
+    type StepOptions = {
+        createLog: boolean;
+        takeScreenshot: boolean | WebdriverIO.Element;
+        customDescription?: string;
+        customExpectation?: string;
+        customActual?: string;
+    };
 ```
 
 For more information on WebdriverIO see the [homepage](http://webdriver.io).

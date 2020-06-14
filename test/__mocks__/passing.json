@@ -11,20 +11,18 @@
     "end": "2019-03-07T19:49:39.535Z",
     "steps": [
         {
-            "order": 0,
             "description": "Navigate to the home page",
             "expectation": "Home page should load",
             "actual": "The home page loaded",
-            "status": "Passed",
-            "screenshotPath": "results\\1.0.0\\step-generation\\Steps\\screenshots\\0.png"
+            "status": "passed",
+            "screenshotPath": "results\\1.0.0\\step-generation\\screenshots\\03214124.png"
         },
         {
-            "order": 1,
             "description": "The title should be correct",
             "expectation": "The title should be correct",
             "actual": "The title was correct",
-            "status": "Passed",
-            "screenshotPath": "results\\1.0.0\\step-generation\\Steps\\screenshots\\1.png"
+            "status": "passed",
+            "screenshotPath": "results\\1.0.0\\step-generation\\screenshots\\12313235.png"
         }
     ]
 }

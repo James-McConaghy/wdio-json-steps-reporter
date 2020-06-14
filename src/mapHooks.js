@@ -9,8 +9,9 @@ module.exports = function mapHooks(suiteHooks) {
         hookResult.duration = hook._duration
         hookResult.title = hook.title
         hookResult.associatedSuite = hook.parent
-        hookResult.associatedTest = hook.currentTest
+        hookResult.associatedTest = hook.associatedTest
         hookResult.state = hook.errors && hook.errors.length ? hook.state : "passed"
+        hookResult.steps = hook.steps
 
         if (hook.error) {
             if (hook.error.type) {
