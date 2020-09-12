@@ -1,6 +1,6 @@
 {
   "name": "wdio-json-steps-reporter",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A WebdriverIO plugin. Report step by step results in json format with screenshot support",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
@@ -41,7 +41,7 @@
     "@wdio/mocha-framework": "^6.1.8",
     "@wdio/sync": "^6.1.8",
     "chai": "^4.2.0",
-    "chromedriver": "^83.0.0",
+    "chromedriver": "^85.0.0",
     "eslint": "^7.0.0",
     "mocha": "^7.2.0",
     "wdio-chromedriver-service": "^6.0.3"

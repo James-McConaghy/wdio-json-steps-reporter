@@ -4,8 +4,8 @@ const path = require("path")
 const mapHooks = require("./mapHooks")
 const mapTests = require("./mapTests")
 const initResultSet = require("./initResultSet")
-const step = require("./step")
 const mergeResults = require("./mergeResults")
+const {step, steps} = require("./step")
 
 class Reporter extends WDIOReporter {
 
@@ -36,7 +36,6 @@ class Reporter extends WDIOReporter {
             this.screenshotPath = this.specDir + path.sep + "screenshots"
             fsExtra.ensureDirSync(this.screenshotPath)  
         }
-        
     }
 
     onHookStart(hook) {
@@ -156,5 +155,6 @@ class Reporter extends WDIOReporter {
 module.exports = { 
     reporter: Reporter,
     step,
+    steps,
     mergeResults
 }

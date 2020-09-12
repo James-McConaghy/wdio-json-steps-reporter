@@ -1,12 +1,12 @@
 const expect = require("chai").expect
-const step = require("../../src/step")
+const {step, steps} = require("../../src/step")
 
-describe("Home Page", () => {
+describe("Single Steps : Getting Started", () => {
 
     before(function () {
         step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
             browser.url("https://webdriver.io")
-        })
+        });
     })
 
     beforeEach(function () {
@@ -16,45 +16,43 @@ describe("Home Page", () => {
     })
 
     it("AC 1 should have the right title", () => {
-        step({createLog: true, takeScreenshot: true}, "The title should be correct", "The title should be correct", "The title was correct", () => {
-            const title = browser.getTitle()
-            expect(title).to.equal("WebdriverIO · Next-gen browser and mobile automation test framework for Node.js")
-        })
+        //using a reusable page object action/assertion
+        verifyPageTitle({createLog: true, takeScreenshot: true})
     })
 
     it.skip("AC 2 test should be skipped", () => {
         step({createLog: true, takeScreenshot: true}, "This test and child steps should be skipped", "This test and child steps should be skipped", "This test and child steps should be skipped", () => {
-            const title = browser.getTitle()
-            expect(title).to.equal("WebdriverIO · Next-gen browser and mobile automation test framework for Node.js")
+            browser.deleteSession()
         })
     })
 
-    it("AC 3 should not log a step", () => {
-        step({createLog: false, takeScreenshot: false}, "The title should be correct", "The title should be correct", "The title was correct", () => {
-            const title = browser.getTitle()
-            expect(title).to.equal("WebdriverIO · Next-gen browser and mobile automation test framework for Node.js")
+    it("AC 3 test and step executed but NO step should be logged", () => {
+        step({createLog: false}, "Test and steps will execute but not logs will be generated", "Test and steps will execute but not logs will be generated", "Test and steps will execute but not logs will be generated", () => {
+            navigateToPage("https://github.com/webdriverio/webdriverio", {createLog: false})
+            browser.pause(3000)
         })
     })
 
-    describe("Getting Started", () => {
+    it("AC 4 should navigate to the page and have the right title", () => {
+        steps({createLog: true, takeScreenshot: true},
+            [function(stepOptions) { return navigateToPage("https://webdriver.io", stepOptions)}], 
+            [function(stepOptions) { return verifyPageTitle(stepOptions) }]
+        )
+    })
 
-        before(function () {
-            step({createLog: true, takeScreenshot: true}, "Navigate to the Getting Started page", "Getting Started page should load", "Getting Started started page loaded", () => {
-                browser.url("https://webdriver.io/docs/gettingstarted.html")
-            })
-        })
-    
-        it("AC 4 should have the right title", () => {
-            step({createLog: true, takeScreenshot: true}, "The title should be correct", "The title should be correct", "The title was correct", () => {
-                const title = browser.getTitle()
-                expect(title).to.equal("Getting Started · WebdriverIO")
-            })
+    describe("Combined Steps : Getting Started", () => {
+      
+        it("AC 5 should navigate to the page and have the right title", () => {
+            steps({createLog: true, takeScreenshot: true},
+                [(stepOptions) => navigateToPage("https://webdriver.io")], 
+                [(stepOptions) => verifyPageTitle(stepOptions)]
+            )
         })
     
     }) 
 
     afterEach(function () {
-        step({createLog: true, takeScreenshot: true}, "Delete all cookies", "The cookies should be deleted", "The cookies were deleted", () => {
+        step({createLog: true, takeScreenshot: false}, "Delete all cookies", "The cookies should be deleted", "The cookies were deleted", () => {
             browser.deleteAllCookies()    
         })
     })
@@ -66,3 +64,22 @@ describe("Home Page", () => {
     })
 
 })
+
+
+//reusable page actions
+function navigateToPage(url, stepOptions) {
+    return step(stepOptions, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
+        browser.url(url)
+    });
+}
+
+//reusable page assertions
+function verifyPageTitle(stepOptions) {
+    return step(stepOptions, 
+        "Verify the page title is correct", 
+        "The page title should be correct", 
+        "The title was correct", () => {
+        const title = browser.getTitle()
+        expect(title).to.equal("WebdriverIO · Next-gen browser and mobile automation test framework for Node.js")
+    })
+}
