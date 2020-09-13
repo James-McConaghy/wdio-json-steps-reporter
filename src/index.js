@@ -55,7 +55,7 @@ class Reporter extends WDIOReporter {
         }
     }
 
-    onHookEnd(hook) {      
+    onHookEnd(hook) {
         switch (hook.title.split("\"")[1]) {
         case "before all":
             this.beforeAllHooksArray.push(hook)

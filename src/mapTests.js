@@ -11,8 +11,6 @@ module.exports = function mapTests(suiteTests) {
         testCase.state = test.state
         testCase.steps =  test.state === "skipped" ? [] : test.steps
 
-        console.log(test.steps)
-
         if (test.error) {
             if (test.error.type) {
                 testCase.errorType = test.error.type
