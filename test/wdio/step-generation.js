@@ -27,25 +27,21 @@ describe("Single Steps : Getting Started", () => {
     })
 
     it("AC 3 test and step executed but NO step should be logged", () => {
-        step({createLog: false}, "Test and steps will execute but not logs will be generated", "Test and steps will execute but not logs will be generated", "Test and steps will execute but not logs will be generated", () => {
-            navigateToPage("https://github.com/webdriverio/webdriverio", {createLog: false})
+        step({createLog: false}, "Test and steps will execute but not logs will be generated", "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", () => {
             browser.pause(3000)
         })
     })
 
-    it("AC 4 should navigate to the page and have the right title", () => {
-        steps({createLog: true, takeScreenshot: true},
-            [function(stepOptions) { return navigateToPage("https://webdriver.io", stepOptions)}], 
-            [function(stepOptions) { return verifyPageTitle(stepOptions) }]
-        )
-    })
-
     describe("Combined Steps : Getting Started", () => {
       
-        it("AC 5 should navigate to the page and have the right title", () => {
+        it("AC 4 should navigate to the page and have the right title", () => {
             steps({createLog: true, takeScreenshot: true},
-                [(stepOptions) => navigateToPage("https://webdriver.io")], 
-                [(stepOptions) => verifyPageTitle(stepOptions)]
+                [
+                    (stepOptions) => scrollPage(0, 1000, stepOptions)
+                ], 
+                [
+                    (stepOptions) => verifyPageTitle(stepOptions)
+                ]
             )
         })
     
@@ -66,10 +62,12 @@ describe("Single Steps : Getting Started", () => {
 })
 
 
-//reusable page actions
-function navigateToPage(url, stepOptions) {
-    return step(stepOptions, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
-        browser.url(url)
+//reusable page action
+function scrollPage(x, y, stepOptions) {
+    return step(stepOptions, `Scroll the page by ${x}, ${y}`, `The page should have scrolled by ${x}, ${y}`, `The page scrolled by ${x}, ${y}`, () => {
+        browser.execute((x, y) => {
+            scrollBy(x, y)
+         }, x, y)
     });
 }
 

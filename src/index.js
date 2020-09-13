@@ -41,35 +41,35 @@ class Reporter extends WDIOReporter {
     onHookStart(hook) {
         hook.steps = []   
         this.delegatedStepsArray = hook.steps
-        switch (hook.title) {
-        case "\"before all\" hook":
+        switch (hook.title.split("\"")[1]) {
+        case "before all":
             break
-        case "\"before each\" hook":
+        case "before each":
             break
-        case "\"after each\" hook":
+        case "after each":
             break
-        case "\"after all\" hook":
+        case "after all":
             break
         default:
             break
         }
     }
 
-    onHookEnd(hook) {
-        switch (hook.title) {
-        case "\"before all\" hook":
+    onHookEnd(hook) {      
+        switch (hook.title.split("\"")[1]) {
+        case "before all":
             this.beforeAllHooksArray.push(hook)
             hook.associatedTest = "*"  
             break
-        case "\"before each\" hook":
+        case "before each":
             hook.associatedTest = this.delegatedTest.title
             this.delegatedStepsArray = this.delegatedTest.steps
             break
-        case "\"after each\" hook":
+        case "after each":
             hook.associatedTest = this.delegatedTest.title
             this.delegatedStepsArray = this.delegatedTest.steps
             break
-        case "\"after all\" hook":
+        case "after all":
             hook.associatedTest = "*"  
             this.afterAllHooksArray.push(hook)
             break
