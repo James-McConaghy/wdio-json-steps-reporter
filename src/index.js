@@ -5,6 +5,7 @@ const mapHooks = require("./mapHooks")
 const mapTests = require("./mapTests")
 const initResultSet = require("./initResultSet")
 const mergeResults = require("./mergeResults")
+const saveFullPageScreenshot = require("./screenshot")
 const {step, steps} = require("./step")
 
 class Reporter extends WDIOReporter {
@@ -85,10 +86,14 @@ class Reporter extends WDIOReporter {
     }
 
     onStepEvent(stepOptions, step) {
-        if (stepOptions.createLog) {
+        if (stepOptions.createLog || stepOptions.takeScreenshot) {
             if (stepOptions.takeScreenshot) {
                 step.screenshotPath = this.screenshotPath + path.sep + Date.now() + ".png"
-                browser.saveScreenshot(step.screenshotPath)
+                if (stepOptions.takeScreenshot.toString().toLowerCase() != "viewport" && browser.capabilities.browserName.toLowerCase() == "chrome") {
+                    saveFullPageScreenshot(step.screenshotPath)
+                } else {
+                    browser.saveScreenshot(step.screenshotPath)
+                }
             }
             this.delegatedStepsArray.push(step)
         }

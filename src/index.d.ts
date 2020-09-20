@@ -13,7 +13,7 @@ declare module "wdio-json-steps-reporter" {
 
     type StepOptions = {
         createLog: boolean;
-        takeScreenshot: boolean | WebdriverIO.Element;
+        takeScreenshot: boolean | string;
         customDescription?: string;
         customExpectation?: string;
         customActual?: string;
