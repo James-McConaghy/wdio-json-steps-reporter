@@ -69,10 +69,10 @@ before(function () {
 it("should have the correct title", function() {
     page.verifyPageTitle() //defaults = {createStep: true, takeScreenshot: false}
     page.verifyPageTitle({createStep: false) // no log will be generated in the report, the tasks will still be executed
-    page.verifyPageTitle({takeScreenshot: true})
+    page.verifyPageTitle({takeScreenshot: true}) //fullpage screenshot
+    page.verifyPageTitle({takeScreenshot: "viewport"}) //chrome only viewport screenshot
     page.verifyPageTitle({customDescription: "Override the description", customExpectation: "Override the expectation"}))
 })
-
 
 verifyPageTitle(stepOptions?: StepOptions): void {
     step(stepOptions, 
@@ -87,10 +87,11 @@ verifyPageTitle(stepOptions?: StepOptions): void {
 
 ### Step Options
 The options, can be used to override any default page object actions steps that have been created. Defaults = {createStep: true, takeScreenshot: false}.
+The takeScreenshot parameter can accept a string value of "viewport" supported in chrome browser executions. Otherwise any other truthy value will attempt a full page capture
 ```javascript
     type StepOptions = {
         createLog: boolean;
-        takeScreenshot: boolean | WebdriverIO.Element;
+        takeScreenshot: boolean | string;
         customDescription?: string;
         customExpectation?: string;
         customActual?: string;

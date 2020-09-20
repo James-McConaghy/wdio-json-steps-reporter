@@ -10,14 +10,14 @@ describe("Single Steps : Getting Started", () => {
     })
 
     beforeEach(function () {
-        step({createLog: true, takeScreenshot: true}, "Refresh the page", "The page should refresh", "The page refreshed", () => {
+        step({createLog: true, takeScreenshot: "fullpage"}, "Refresh the page", "The page should refresh", "The page refreshed", () => {
             browser.refresh()
         })
     })
 
     it("AC 1 should have the right title", () => {
         //using a reusable page object action/assertion
-        verifyPageTitle({createLog: true, takeScreenshot: true})
+        verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
     })
 
     it.skip("AC 2 test should be skipped", () => {
