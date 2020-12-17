@@ -4,7 +4,7 @@ const path = require("path")
 const mapHooks = require("./mapHooks")
 const mapTests = require("./mapTests")
 const initResultSet = require("./initResultSet")
-const mergeResults = require("./mergeResults")
+const mergeAndBuildReport = require("./mergeAndBuildReport")
 const saveFullPageScreenshot = require("./screenshot")
 const {step, steps} = require("./step")
 
@@ -161,5 +161,5 @@ module.exports = {
     reporter: Reporter,
     step,
     steps,
-    mergeResults
+    mergeAndBuildReport
 }

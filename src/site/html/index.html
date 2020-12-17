@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Test Results</title>
+        <link rel="stylesheet" href="./stylesheet.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div id="root">
+            <div class="container column" id="app">
+                <div class="header" id="header">
+                    <div class="headerSection">
+                        <h2>Test Results</h2>
+                    </div>
+                    <div class="headerSection">
+                        <form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
+                            <fieldset>
+                                <input type='file' id='fileinput'>
+                                <input type='button' id='btnLoad' value='Load' onclick='loadFile();'>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <div class="container row" id="dashboard">
+                    <div class="container column" id="menu">
+                        <div class="container column" id="testsOverview"></div>
+                        <div class="container row" id="search">
+                            <input class="tag" id="searchBar" type="text" />
+                        </div>
+                        <div id="testsList"></div>
+                    </div>
+                    <div class="container row" id="details"></div>
+                </div>
+            </div>
+        </div>
+        <script src="./script.js"></script>
+    </body>
+</html>

@@ -1,12 +1,13 @@
-const fs = require("fs")
+const fs = require("fs-extra")
 const path = require("path")
 
-module.exports = function mergeResults(...args) {
+module.exports = function mergeAndBuildReport(...args) {
     const dir = args[0]
     const customFileName = args[1] || Date.now()
     const rawData = getDataFromFiles(dir)
     const mergedResults = mergeData(rawData)
     writeFile(dir, mergedResults, customFileName)
+    buildReport(dir)
 }
 
 function getDataFromFiles(dir) {
@@ -53,3 +54,29 @@ function writeFile(dir, mergedResults, customFileName) {
     const filePath = path.join(dir, fileName)
     fs.writeFileSync(filePath, JSON.stringify(mergedResults))
 }
+
+
+function buildReport(dir) {
+    const buildDir = "./report/"
+    const targetDir = dir.replace("./", buildDir)
+    const srcDirJS = __dirname + "/site/js/"
+    const srcDirCSS = __dirname + "/site/css/"
+    const srcDirHTML = __dirname + "/site/html/"
+    
+
+    fs.rmdirSync(buildDir, { recursive: true });
+    fs.ensureDirSync(buildDir)
+    fs.ensureDirSync(targetDir) 
+    fs.copySync(dir, targetDir)
+    fs.copyFileSync(srcDirHTML+"index.html", buildDir+"index.html")
+    mergeToBuild(srcDirJS, buildDir+"script.js")
+    mergeToBuild(srcDirCSS, buildDir+"stylesheet.css")
+}
+
+function mergeToBuild(srcDir, buildFile) {
+    let files = fs.readdirSync(srcDir)
+    files.forEach(file => {
+        let content = fs.readFileSync(srcDir + file)
+        fs.appendFileSync(buildFile, content + "\n\n")
+    })
+}  
