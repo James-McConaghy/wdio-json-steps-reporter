@@ -1,14 +1,15 @@
-function render_HTML_step(step) {
-    const HTML_step = document.createElement('div')
-    HTML_step.className = "step flex row"
-    HTML_step.innerHTML = prefab_HTML_step(step)
-    document.getElementById("stepLogs").append(HTML_step)
+function prefab_HTML_step(step, depth) {
+    const prefab = document.createElement('div')
+    prefab.className = "step flex row"
+    prefab.innerHTML = inner_HTML_step(step)
+    prefab.style.paddingLeft = `${depth * 15}px`
+    return prefab
 }
 
-function prefab_HTML_step(step) {
+function inner_HTML_step(step) {
     return `
     <div class="step flex row">
-        ${this.prefab_HTML_step_icons(step)}
+        ${this.inner_HTML_step_icons(step)}
         <div class="flex-grow column">
             <span class="stepText">${step.description}</span>
             <span class="stepText">${step.expectation}</span>
@@ -21,7 +22,7 @@ function prefab_HTML_step(step) {
     </div>`
 }
 
-function prefab_HTML_step_icons(step) {
+function inner_HTML_step_icons(step) {
     const passedIcon = `<span class="stepText"><i class="greenText fa fa-check-square-o icon" aria-hidden="true"></i></span>`
     const failedIcon = `<span class="stepText"><i class="errorText fa fa-bug icon" aria-hidden="true"></i></span>`
 

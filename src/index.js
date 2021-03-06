@@ -4,7 +4,7 @@ const path = require("path")
 const mapHooks = require("./mapHooks")
 const mapTests = require("./mapTests")
 const initResultSet = require("./initResultSet")
-const mergeAndBuildReport = require("./mergeAndBuildReport")
+const generateWebReport = require("./generateWebReport")
 const saveFullPageScreenshot = require("./screenshot")
 const {step, steps} = require("./step")
 
@@ -17,11 +17,13 @@ class Reporter extends WDIOReporter {
         this.beforeAllHooksArray = []
         this.afterAllHooksArray = []
 
+        this.delegatedSuite = []
         this.delegatedTest = undefined
         this.delegatedStepsArray = undefined
                 
+        this.testsRootDir = path.sep + (options.testRootFolder ? options.testRootFolder.replace(/[\/\\]/g, '') : "test") + path.sep
         this.outputDir = path.normalize(options.outputDir)
-        this.specDir = path.normalize(options.outputDir)
+        
         this.fileName = options.logFile
 
         process.on("step:log", (stepOptions, step) => {
@@ -30,13 +32,21 @@ class Reporter extends WDIOReporter {
     }
 
     onRunnerStart(runner) {
+        // Create the results folder tree for the current test being executed in the specified output directory
+        // The folder strucutre will follow the same structure as the test files location
         if (this.options.logFile) {
-            const specName = runner.specs[0]            
-            const folderName = specName.substring(specName.lastIndexOf(path.sep) + 1, specName.lastIndexOf("."))
-            this.specDir = this.outputDir + path.sep + folderName
-            this.screenshotPath = this.specDir + path.sep + "screenshots"
+            const specName = runner.specs[0]         
+            const testResultPath = specName.substring(specName.indexOf(this.testsRootDir) + this.testsRootDir.length, specName.lastIndexOf("."))
+            this.resultPath = path.join(this.outputDir, testResultPath)
+            this.screenshotPath = path.join(this.resultPath, "screenshots")
             fsExtra.ensureDirSync(this.screenshotPath)  
         }
+    }
+
+    onSuiteStart(suite) {
+        suite.associatedSuite = []
+        suite.associatedSuite = [...suite.associatedSuite, ...this.delegatedSuite]
+        this.delegatedSuite.push(suite.uid)
     }
 
     onHookStart(hook) {
@@ -88,7 +98,7 @@ class Reporter extends WDIOReporter {
     onStepEvent(stepOptions, step) {
         if (stepOptions.createLog || stepOptions.takeScreenshot) {
             if (stepOptions.takeScreenshot) {
-                step.screenshotPath = this.screenshotPath + path.sep + Date.now() + ".png"
+                step.screenshotPath = path.join(this.screenshotPath, Date.now() + ".png")
                 if (stepOptions.takeScreenshot.toString().toLowerCase() != "viewport" && browser.capabilities.browserName.toLowerCase() == "chrome") {
                     saveFullPageScreenshot(step.screenshotPath)
                 } else {
@@ -102,10 +112,15 @@ class Reporter extends WDIOReporter {
         }
     }
 
+    onSuiteEnd(suite) {
+        this.delegatedSuite.pop()
+    }
+
     onRunnerEnd(runner) {
-        const json = this.prepareJson(runner)
+        let json = this.prepareJson(runner)
+        json = this.organiseJson(json)
         this.write(JSON.stringify(json))
-        fsExtra.moveSync(this.fileName, this.specDir + path.sep + "results.json", {overwrite: true})
+        fsExtra.moveSync(this.fileName, path.join(this.resultPath, "results.json"), {overwrite: true})
     }
 
     prepareJson(runner) {
@@ -116,32 +131,38 @@ class Reporter extends WDIOReporter {
             for (const suiteKey of Object.keys(this.suites)) {
                 let suite = this.suites[suiteKey]
 
-                suite.path = suite.path ? suite.path : this.specDir + path.sep + suite.title             
-                suite.suites.forEach((childSuite) => {
-                    childSuite.path = suite.path + path.sep + childSuite.title
+                suite.path = suite.path ? suite.path : this.resultPath + path.sep + suite.title             
+                //suite.suites.forEach((childSuite) => {
+                //    childSuite.path = suite.path + path.sep + childSuite.title
 
                     //Add before all hooks to each child suite if hook belongs to suite
-                    this.beforeAllHooksArray.filter(hook => suite.title === hook.parent).forEach(hook => {
-                        childSuite.hooks.unshift(hook)
-                    })
+                    // this.beforeAllHooksArray.filter(hook => suite.title === hook.parent).forEach(hook => {
+                    //     console.log("ADDING " + suite.title)
+                    //     console.log(hook)
+                    //     childSuite.hooks.unshift(hook)
+                    // })
 
-                    //Add after all hooks to each child suite if hook belongs to suite
-                    this.afterAllHooksArray.filter(hook => suite.title === hook.parent).forEach(hook => {
-                        childSuite.hooks.push(hook)
-                    })
-                })
+                    // //Add after all hooks to each child suite if hook belongs to suite
+                    // this.afterAllHooksArray.filter(hook => suite.title === hook.parent).forEach(hook => {
+                    //     childSuite.hooks.push(hook)
+                    // })
+                //})
 
                 if (suite.tests.length > 0) {
                     let testSuite = {}
+                    testSuite.uid = suite.uid
                     testSuite.name = suite.title
                     testSuite.duration = suite._duration
                     testSuite.start = suite.start
                     testSuite.end = suite.end
                     testSuite.sessionId = runner.sessionId
+                    testSuite.associatedSuite = suite.associatedSuite
+                    testSuite.suites = []
                     testSuite.tests = mapTests(suite.tests)
                     testSuite.hooks = mapHooks(suite.hooks)
                     testSuite.file = runner.specs[0].substring(runner.specs[0].lastIndexOf(path.sep) + 1, runner.specs[0].length)
-                    testSuite.path = suite.path ? suite.path : this.specDir + path.sep + suite.title
+                    testSuite.testPath = runner.specs[0]
+                    testSuite.resultPath = this.resultPath
 
                     resultSet.state.failed += testSuite.hooks.filter(hook => hook.error).length
                     resultSet.state.passed += testSuite.tests.filter(test => test.state === "passed").length
@@ -150,9 +171,44 @@ class Reporter extends WDIOReporter {
                     resultSet.suites.push(testSuite)
                 }
             }
+
+            resultSet.state.state = []
+            if (resultSet.state.failed > 0) {
+                resultSet.state.state.push("failed")
+            } else {
+                if (resultSet.state.skipped > 0) {
+                    resultSet.state.state.push("skipped")
+                } 
+                if (resultSet.state.passed > 0) {
+                    resultSet.state.state.push("passed")
+                }
+            }
         }
 
         return resultSet
+    }
+
+    organiseJson(json) {
+
+        const orderedByAssociatedSuiteDepth = json.suites.sort((a, b) => {
+            return a.associatedSuite.length - b.associatedSuite.length
+        })
+
+        for (let i = orderedByAssociatedSuiteDepth.length - 1; i >= 0; i--) {
+            let suite = orderedByAssociatedSuiteDepth[i]
+            let associatedSuiteUID = suite.associatedSuite[suite.associatedSuite.length - 1]
+            if (associatedSuiteUID) {
+                let removedSuite = orderedByAssociatedSuiteDepth.splice(i, 1)
+                let associatedSuite = orderedByAssociatedSuiteDepth.find(suite => {
+                    return suite.uid == associatedSuiteUID
+                })
+                //associatedSuite.suites.push(removedSuite)
+                associatedSuite.suites = [...removedSuite, ...associatedSuite.suites]
+            }
+            
+        }
+
+        return json
     }
     
 }
@@ -161,5 +217,5 @@ module.exports = {
     reporter: Reporter,
     step,
     steps,
-    mergeAndBuildReport
+    generateWebReport
 }

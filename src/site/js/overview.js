@@ -1,9 +1,9 @@
 function render_HTML_overview() {
 
-    const total = results.state.passed + results.state.skipped + results.state.failed
-    const passedWidth = results.state.passed / total * 100
-    const skippedWidth = results.state.skipped / total * 100
-    const failedWidth = results.state.failed / total * 100
+    const total = loadedFile.passed + loadedFile.skipped + loadedFile.failed
+    const passedWidth = loadedFile.passed / total * 100
+    const skippedWidth = loadedFile.skipped / total * 100
+    const failedWidth = loadedFile.failed / total * 100
     const passRate = Math.floor(passedWidth)
 
     const prefab_HTML_overview = `<div class="container row justified">
@@ -12,9 +12,9 @@ function render_HTML_overview() {
     </div>
     <div id="testsChart">
         <div class="flex full-width small-rounded row">
-            <div data-status="passed" class="passed pointer selected" style="width: ${passedWidth}%">${results.state.passed}</div>
-            <div data-status="skipped" class="skipped pointer selected" style="width: ${skippedWidth}%">${results.state.skipped}</div>
-            <div data-status="failed" class="failed pointer selected" style="width: ${failedWidth}%">${results.state.failed}</div>
+            <div data-status="passed" class="passed pointer selected" style="width: ${passedWidth}%">${loadedFile.passed}</div>
+            <div data-status="skipped" class="skipped pointer selected" style="width: ${skippedWidth}%">${loadedFile.skipped}</div>
+            <div data-status="failed" class="failed pointer selected" style="width: ${failedWidth}%">${loadedFile.failed}</div>
         </div>    
     </div>`
 

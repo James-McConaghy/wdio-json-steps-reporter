@@ -1,5 +1,5 @@
 const expect = require("chai").expect
-const {step, steps} = require("../../src/step")
+const {step, steps} = require("../../../src/step")
 
 describe("Single Steps : Getting Started", () => {
 
@@ -32,31 +32,17 @@ describe("Single Steps : Getting Started", () => {
         })
     })
 
-    describe("Combined Steps : Getting Started is first child", () => {
+    describe("Combined Steps : Getting Started", () => {
       
         it("AC 4 should navigate to the page and have the right title", () => {
             steps({createLog: true, takeScreenshot: true},
                 [
-                    (stepOptions) => verifyPageTitle(stepOptions)
+                    (stepOptions) => scrollPage(0, 1000, stepOptions)
                 ], 
                 [
                     (stepOptions) => verifyPageTitle(stepOptions)
                 ]
             )
-        })
-    
-    }) 
-
-    describe("Combined Steps : Getting Started is second child", () => {
-      
-        it("AC 5 should have the right title", () => {
-            //using a reusable page object action/assertion
-            verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
-        })
-
-        it("AC 6 should have the right title", () => {
-            //using a reusable page object action/assertion
-            verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
         })
     
     }) 
@@ -75,25 +61,13 @@ describe("Single Steps : Getting Started", () => {
 
 })
 
-describe("Combined Steps : Getting Started duplicate", () => {
-      
-    it("AC 7 should navigate to the page and have the right title", () => {
-        steps({createLog: true, takeScreenshot: true},
-            [
-                (stepOptions) => verifyPageTitle(stepOptions)
-            ], 
-            [
-                (stepOptions) => verifyPageTitle(stepOptions)
-            ]
-        )
-    })
-
-}) 
 
 //reusable page action
 function scrollPage(x, y, stepOptions) {
     return step(stepOptions, `Scroll the page by ${x}, ${y}`, `The page should have scrolled by ${x}, ${y}`, `The page scrolled by ${x}, ${y}`, () => {
-        browser.execute((x, y) => scrollBy(x, y), x, y)
+        browser.execute((x, y) => {
+            scrollBy(x, y)
+         }, x, y)
     });
 }
 
@@ -104,6 +78,6 @@ function verifyPageTitle(stepOptions) {
         "The page title should be correct", 
         "The title was correct", () => {
         const title = browser.getTitle()
-        expect(title).to.include("WebdriverIO")
+        expect(title).to.equal("WebdriverIO · Next-gen browser and mobile automation test framework for Node.js | WebdriverIO")
     })
 }

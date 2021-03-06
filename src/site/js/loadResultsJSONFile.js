@@ -1,4 +1,4 @@
-let results = null
+let loadedFile = null
 
 function loadFile() {
     let input, file, fr;
@@ -21,7 +21,7 @@ function loadFile() {
 
     function receivedText(e) {
         let lines = e.target.result;
-        results = JSON.parse(lines);
+        loadedFile = JSON.parse(lines);
         render_HTML_overview()
         render_HTML_menu()
     }

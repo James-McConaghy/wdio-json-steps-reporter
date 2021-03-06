@@ -149,16 +149,6 @@ nav {
   max-height: 30%;
 }
 
-#menu {
-  flex-grow: 1;
-  height: auto;
-  width: 400px;
-  min-width: 400px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  border-right: 1px solid #282c345b;
-}
-
 #details {
   width: 100%;
   height: 100%;
@@ -168,6 +158,11 @@ nav {
   overflow-y: auto;
 }
 
+#detailsInfo {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 #detailsSteps {
   height: auto;
   color: white;
@@ -175,11 +170,11 @@ nav {
   font-weight: 400;
   overflow-y: auto;
   border-left: 1px solid #282c345b;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 #steps {
-  padding-left: 1vmin;
-  padding-right: 1vmin;
   align-items: center;
   height: auto;
   text-align: center;
@@ -192,7 +187,6 @@ nav {
 
 .detailsSection {
   margin: auto;
-  width: calc(100% - 3vmin);
   color: white;
   text-align: left;
   font-weight: 400;
@@ -260,24 +254,14 @@ nav {
   align-items: center
 }
 
-#testsList {
-  margin-top: 1.5vmin;
-  align-items: center;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 1.5vmin;
+#leftColumn {
+  flex-grow: 1;
+  height: auto;
+  width: 400px;
+  min-width: 400px;
   overflow-y: auto;
-  border-top: 1px solid #282c345b;
-}
-
-.menuLink {
-  margin: auto 3vmin;
-  background-color: #282c34;
-  width: 100%;
-  color: white;
-  height: 90px;
-  border-radius: 4px;
+  overflow-x: hidden;
+  border-right: 1px solid #282c345b;
 }
 
 #search {
@@ -294,6 +278,27 @@ nav {
   padding-right: 5px;
 }
 
+#menu {
+  margin-top: 1.5vmin;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1.5vmin;
+  overflow-y: auto;
+  border-top: 1px solid #282c345b;
+}
+
+.menuLink {
+  margin: auto 3vmin;
+  background-color: #282c34;
+  width: 100%;
+  color: white;
+  height: 90px;
+  border-radius: 4px;
+}
+
 #logs, #time, #browserstack, #browsers, #platform {
   flex-grow: 0;
   height: auto;
@@ -307,13 +312,13 @@ nav {
 }
 
 .sectionHeading, .testHeading {
-    width: calc(100% - 3vmin);
+    width: 100%;
     font-weight: 400;
     font-size: 0;
     text-transform: uppercase;
     display: flex;
     padding: 0;
-    margin: 1vmin auto;
+    margin: 0px auto;
     font-size: 1rem;
     text-align: left;
     min-height: 30px;
@@ -341,7 +346,9 @@ nav {
 .section {
   width: 100%;
   display: grid;
+  padding-left: 15px;
   grid-gap: 5px;
+  margin-bottom: 5px;
   flex-flow: column;
   color: white;
   text-align: left;
@@ -351,7 +358,7 @@ nav {
 
 .menuRow {
   margin: auto;
-  width: calc(100% - 30px);
+  width: 100%;
   height: 30px;
   background-color: #282c34;
   display: flex;
@@ -423,12 +430,31 @@ nav {
   background: linear-gradient(#000, #000) no-repeat center/2px 100%;
 }
 
-.stepSectionStart {
-  margin-left: 1vmin;
-  margin-right: 1vmin;
-  border-bottom: 2px dashed #000000;
+.suiteHeading {
   margin-bottom: 10px;
   opacity: 0.5;
+  width: 100%;
+  font-weight: 600;
+  font-size: 0;
+  display: flex;
+  padding: 0;
+  margin: 0px auto;
+  font-size: 1rem;
+  text-align: left;
+  min-height: 30px;
+  max-height: 30px;
+  color: #000000;
+}
+
+.suiteHeading > span {
+  vertical-align: middle;
+  font-weight: 600;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.dashed {
+  border-bottom: 2px dashed #000000;
 }
 
 .tag {
@@ -444,12 +470,16 @@ nav {
   opacity: 1;
 }
 
-.deselected  {
+.deselected, .translucent  {
   opacity: 0.5;
 }
 
 .center {
   text-align: center;
+}
+
+.left {
+  text-align: left;
 }
 
 .testStatus {
@@ -545,8 +575,16 @@ nav {
   max-width: 12px;
 }
 
+.open {
+  rotate: -90deg;
+}
+
 .hidden {
   visibility: hidden;
+}
+
+.collapsed {
+  display: none;
 }
 
 #draggable {
@@ -554,5 +592,5 @@ nav {
   height: calc(100% - 80px);
   position: absolute;
   cursor: col-resize;
-  margin-left: -3px;
+  margin-left: -18px;
 }

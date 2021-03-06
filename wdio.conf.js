@@ -1,6 +1,5 @@
 const version = require("./package.json").version
-const StepsReporter = require("./src/index").reporter
-const mergeResults = require("./src/mergeResults")
+const StepsReporter = require("./src/index")
 
 exports.config = {
     //
@@ -21,7 +20,7 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        "./test/wdio/step-generation.js"
+        "./test/**/*.js"
     ],
     // Patterns to exclude.
     exclude: [
@@ -56,7 +55,7 @@ exports.config = {
         // 5 instances get started at a time.
         maxInstances: 5,
         //
-        browserName: "chrome",
+        browserName: "firefox",
         // If outputDir is provided WebdriverIO can capture driver session logs
         // it is possible to configure which logTypes to include/exclude.
         // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
@@ -69,7 +68,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: "error",
+    logLevel: "info",
     //
     // Set specific log levels per logger
     // loggers:
@@ -109,7 +108,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ["chromedriver"],
+    services: ["geckodriver"],
     
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -129,7 +128,7 @@ exports.config = {
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter.html
     reporters: [
-        [StepsReporter, {
+        [StepsReporter.reporter, {
             outputDir: `./results/${version}`,
         }]
     ],
@@ -261,7 +260,11 @@ exports.config = {
      * @param {<Object>} results object containing test results
      */
     onComplete: function(exitCode, config, capabilities, results) {
-        mergeResults(`./results/${version}`, `${version}.json`)
+        //StepsReporter.generateWebReport(`./results/${version}`, `${version}.json`)
+
+        StepsReporter.generateWebReport({
+            resultsDir: `./results/${version}`,
+        })
     }
     /**
     * Gets executed when a refresh happens.
