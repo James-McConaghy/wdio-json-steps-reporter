@@ -5,9 +5,9 @@
 
 ## Example Screenshots
 
-![Dashboard](https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-dashboard.png)
-![Highlight](https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-highlight.png)
+<img src="https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-dashboard.png" width="900"/>
 
+<img src="hhttps://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-highlight.png" width="900"/>
 
 ## Setup
 
