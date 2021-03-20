@@ -3,6 +3,11 @@
 > A WebdriverIO plugin. Report results in json format with steps and screenshot support.
 > This project was derived from the 'wdio-json-reporter' found [here](https://github.com/fijijavis/wdio-json-reporter)
 
+## Example Screenshots
+
+![Dashboard](https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-dashboard.png)
+![Highlight](https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-highlight.png)
+
 
 ## Setup
 
@@ -10,7 +15,7 @@
 
 NPM
 ```bash
-npm install wdio-json-steps-reporter --save-dev
+    npm install wdio-json-steps-reporter --save-dev
 ```
 
 
@@ -18,18 +23,18 @@ npm install wdio-json-steps-reporter --save-dev
 
 Require the reporter in the wdio configuration file. 
 ```javascript
-const StepsReporter = require("wdio-json-steps-reporter")
+    const StepsReporter = require("wdio-json-steps-reporter")
 ```
 
 ##### Use the reporter
 Configure wdio to use the required StepsReporter as a reporter. It is recommended to supply a unique value to ensure historic test records are kept especially when utilizing the react report dashboard to get the full benefits of it's features
 * @param {string} outputDir : The directory where the results will be logged. 
 ```javascript
-reporters: [
-    [StepsReporter.reporter, {
-        outputDir: `./results/${version}`,
-    }]
-]
+    reporters: [
+        [StepsReporter.reporter, {
+            outputDir: `./results/${version}`,
+        }]
+    ]
 ```
 
 #### Overwrite/Add custom commands to browser and element
@@ -50,11 +55,11 @@ when utilizing the report dashboard to get the full benefits of it's features
 
 
 ```javascript
-onComplete: function(exitCode, config, capabilities, results) {
-    StepsReporter.generateWebReport({
-        resultsDir: `./results/${version}`
-    }}
-}
+    onComplete: function(exitCode, config, capabilities, results) {
+        StepsReporter.generateWebReport({
+            resultsDir: `./results/${version}`
+        }}
+    }
 ```
 
 
