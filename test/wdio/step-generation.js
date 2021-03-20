@@ -5,19 +5,20 @@ describe("Single Steps : Getting Started", () => {
 
     before(function () {
         step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
-            browser.url("https://webdriver.io")
+            browser.navigateTo("https://webdriver.io")
         });
     })
 
     beforeEach(function () {
         step({createLog: true, takeScreenshot: "fullpage"}, "Refresh the page", "The page should refresh", "The page refreshed", () => {
             browser.refresh()
+            browser.pause(1000)
         })
     })
 
     it("AC 1 should have the right title", () => {
         //using a reusable page object action/assertion
-        verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
+        verifyPageTitle({createLog: true, takeScreenshot: "viewport", highlightElement: $("h1.hero__title")})
     })
 
     it.skip("AC 2 test should be skipped", () => {
@@ -27,35 +28,25 @@ describe("Single Steps : Getting Started", () => {
     })
 
     it("AC 3 test and step executed but NO step should be logged", () => {
-        step({createLog: false}, "Test and steps will execute but not logs will be generated", "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", () => {
+        step({createLog: false}, "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", () => {
             browser.pause(3000)
         })
     })
 
-    describe("Combined Steps : Getting Started is first child", () => {
-      
-        it("AC 4 should navigate to the page and have the right title", () => {
-            steps({createLog: true, takeScreenshot: true},
-                [
-                    (stepOptions) => verifyPageTitle(stepOptions)
-                ], 
-                [
-                    (stepOptions) => verifyPageTitle(stepOptions)
-                ]
-            )
-        })
-    
-    }) 
+    it("AC 4 group step methods into single steps together", () => {
+        steps({createLog: true, takeScreenshot: true},
+            [
+                (stepOptions) => scrollPage(0, 2000, stepOptions)
+            ], 
+            [
+                (stepOptions) => verifyPageTitle(stepOptions)
+            ]
+        )
+    })
 
-    describe("Combined Steps : Getting Started is second child", () => {
+    describe.skip("Depth 1: skipped", () => {
       
-        it("AC 5 should have the right title", () => {
-            //using a reusable page object action/assertion
-            verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
-        })
-
-        it("AC 6 should have the right title", () => {
-            //using a reusable page object action/assertion
+        it("AC 5 should be skipped", () => {
             verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
         })
     
@@ -74,21 +65,6 @@ describe("Single Steps : Getting Started", () => {
     })
 
 })
-
-describe("Combined Steps : Getting Started duplicate", () => {
-      
-    it("AC 7 should navigate to the page and have the right title", () => {
-        steps({createLog: true, takeScreenshot: true},
-            [
-                (stepOptions) => verifyPageTitle(stepOptions)
-            ], 
-            [
-                (stepOptions) => verifyPageTitle(stepOptions)
-            ]
-        )
-    })
-
-}) 
 
 //reusable page action
 function scrollPage(x, y, stepOptions) {

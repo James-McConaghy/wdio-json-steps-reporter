@@ -1,7 +1,7 @@
 const expect = require("chai").expect
-const {step, steps} = require("../../../src/step")
+const {step} = require("../../../src/step")
 
-describe("Single Steps : Getting Started", () => {
+describe("Depth 0", () => {
 
     before(function () {
         step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
@@ -12,38 +12,39 @@ describe("Single Steps : Getting Started", () => {
     beforeEach(function () {
         step({createLog: true, takeScreenshot: "fullpage"}, "Refresh the page", "The page should refresh", "The page refreshed", () => {
             browser.refresh()
+            browser.pause(1000)
         })
     })
 
     it("AC 1 should have the right title", () => {
-        //using a reusable page object action/assertion
         verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
     })
 
-    it.skip("AC 2 test should be skipped", () => {
-        step({createLog: true, takeScreenshot: true}, "This test and child steps should be skipped", "This test and child steps should be skipped", "This test and child steps should be skipped", () => {
-            browser.deleteSession()
-        })
-    })
-
-    it("AC 3 test and step executed but NO step should be logged", () => {
-        step({createLog: false}, "Test and steps will execute but not logs will be generated", "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", () => {
-            browser.pause(3000)
-        })
-    })
-
-    describe("Combined Steps : Getting Started", () => {
+    describe("Depth 1: first", () => {
       
-        it("AC 4 should navigate to the page and have the right title", () => {
-            steps({createLog: true, takeScreenshot: true},
-                [
-                    (stepOptions) => scrollPage(0, 1000, stepOptions)
-                ], 
-                [
-                    (stepOptions) => verifyPageTitle(stepOptions)
-                ]
-            )
+        it("AC 2 should have the right title", () => {
+            verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
         })
+    
+    }) 
+
+    describe("Depth 1: second", () => {
+      
+        it("AC 3 should have the right title", () => {
+            verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
+        })
+
+        describe("Depth 2: second", () => {
+      
+            it("AC 4 should have the right title", () => {
+                verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
+            })
+
+            it("AC 5 should have the right title", () => {
+                verifyPageTitle({createLog: true})
+            })
+        
+        }) 
     
     }) 
 
@@ -61,13 +62,10 @@ describe("Single Steps : Getting Started", () => {
 
 })
 
-
 //reusable page action
 function scrollPage(x, y, stepOptions) {
     return step(stepOptions, `Scroll the page by ${x}, ${y}`, `The page should have scrolled by ${x}, ${y}`, `The page scrolled by ${x}, ${y}`, () => {
-        browser.execute((x, y) => {
-            scrollBy(x, y)
-         }, x, y)
+        browser.execute((x, y) => scrollBy(x, y), x, y)
     });
 }
 
@@ -78,6 +76,6 @@ function verifyPageTitle(stepOptions) {
         "The page title should be correct", 
         "The title was correct", () => {
         const title = browser.getTitle()
-        expect(title).to.equal("WebdriverIO · Next-gen browser and mobile automation test framework for Node.js | WebdriverIO")
+        expect(title).to.include("WebdriverIO")
     })
 }

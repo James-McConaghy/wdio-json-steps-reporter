@@ -54,29 +54,6 @@ function mergeData(rawData) {
 
     aggregatedReport.results = rawData
 
-
-
-    //let mergedResults
-    //rawData.forEach(data => {
-    //     if (mergedResults === undefined) {
-    //         // use the first result so that we have the right shape
-    //         mergedResults = {}
-    //         Object.assign(mergedResults, data)
-    //         mergedResults.capabilities = [mergedResults.capabilities] // make this an array so we can capture all caps
-    //     } else {
-    //         mergedResults.suites.push(...data.suites)
-    //         mergedResults.specs.push(...data.specs)
-    //         mergedResults.state.passed += data.state.passed
-    //         mergedResults.state.failed += data.state.failed
-    //         mergedResults.state.skipped += data.state.skipped
-    //         mergedResults.capabilities.push(data.capabilities)
-    //     }
-    // })
-
-    // mergedResults.suites.forEach((suite) => {
-    //     mergedResults.end = (suite.end > mergedResults.end ? suite.end : mergedResults.end)
-    // })
-
     return aggregatedReport
 }
 
@@ -93,8 +70,7 @@ function buildReport(resultsDir) {
     const srcDirCSS = __dirname + "/site/css/"
     const srcDirHTML = __dirname + "/site/html/"
     
-
-    fs.rmdirSync(buildDir, { recursive: true });
+    fs.rmdirSync(targetDir, { recursive: true });
     fs.ensureDirSync(buildDir)
     fs.ensureDirSync(targetDir) 
     fs.copySync(resultsDir, targetDir)
@@ -104,6 +80,7 @@ function buildReport(resultsDir) {
 }
 
 function mergeToBuild(srcDir, buildFile) {
+    fs.existsSync(buildFile) ? fs.unlinkSync(buildFile) : null
     let files = fs.readdirSync(srcDir)
     files.forEach(file => {
         let content = fs.readFileSync(srcDir + file)

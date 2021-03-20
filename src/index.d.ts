@@ -13,7 +13,8 @@ declare module "wdio-json-steps-reporter" {
 
     type StepOptions = {
         createLog: boolean;
-        takeScreenshot: boolean | string;
+        takeScreenshot: boolean;
+        highlightElement?: WebdriverIO.Element;
         customDescription?: string;
         customExpectation?: string;
         customActual?: string;
@@ -36,8 +37,8 @@ declare module "wdio-json-steps-reporter" {
         * @param {Function} tasks to be executed by the webdriver
         * @return {Action | Assertion} The Step log object that will be used in the resulting json results and combined Steps wrapper.
     */
-    function step(stepOptions: StepOptions = { createLog: true, takeScreenshot: false }, description: string, expectation: string, actual: string, tasks: Function): Action | Assertion;
-    
+    function step(stepOptions: StepOptions, description: string, expectation: string, actual: string, tasks: Function): Action | Assertion;
+
     /**
      * The steps (plural) wrapper, similar to the single step wrapper can be used to generate a single log and screenshot for multiple Actions/Assertions
      * executed by the test. All actions will get executed first before any assertions are verified.
@@ -56,9 +57,82 @@ declare module "wdio-json-steps-reporter" {
         * 
         * 
     */
-    function steps(stepOptions: StepOptions = { createLog: true, takeScreenshot: false }, actions: Action[], assertions: Assertion[]): void;
+    function steps(stepOptions: StepOptions, actions: Action[], assertions: Assertion[]): void;  
+
+
+    namespace Element {
+        /**
+         * Highlights the element with a red border style.
+         * 
+        */
+        export function highlight(): void
+
+        /**
+         * Removes the highlight style on the current element.
+         * 
+        */
+        export function removeHighlight(): void
+    }
+    
+    namespace Browser {
+
+        export function saveScreenshot(filepath: string): Buffer
+
+        /**
+         * This method overwrites the default wdio saveScreenshot, allowing an Element Selector to be passed in 
+         * which will get highlighted for the screenshot.
+         * 
+            * @param {string} filepath The file path to save the screenshot.
+            * @param {WebdriverIO.Element]} element The element to be highlighted.
+            * 
+        */
+        export function saveScreenshot(filepath: string, element: WebdriverIO.Element): void
+
+        /**
+         * This method will remove all highlight styles that have been applied to elements on the current DOM.
+         * 
+        */
+        export function removeHighlights(): void
+    }
 
 }
 
-module.exports = step;
-module.exports = steps;
+declare namespace WebdriverIO {
+
+    // adding command to `browser`
+    export interface Browser {
+        saveScreenshot(filepath: string): Buffer
+
+        /**
+         * This method overwrites the default wdio saveScreenshot, allowing an Element Selector to be passed in 
+         * which will get highlighted for the screenshot.
+         * 
+            * @param {string} filepath The file path to save the screenshot.
+            * @param {WebdriverIO.Element]} element The element to be highlighted.
+            * 
+        */
+        saveScreenshot(filepath: string, element: WebdriverIO.Element): void
+
+        /**
+         * This method will remove all highlight styles that have been applied to elements on the current DOM.
+         * 
+        */
+        removeHighlights(): void
+    }
+
+    // adding command to `element`
+    export interface Element {
+        /**
+         * Highlights the element with a red border style.
+         * 
+        */
+        highlight(): void
+
+        /**
+         * Removes the highlight style on the current element.
+         * 
+        */
+        removeHighlight(): void
+    }
+
+}

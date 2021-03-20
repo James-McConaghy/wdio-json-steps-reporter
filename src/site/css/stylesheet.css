@@ -189,9 +189,17 @@ nav {
   margin: auto;
   color: white;
   text-align: left;
-  font-weight: 400;
   border-radius: 4px;
   font-size: 0.8rem;
+
+  flex-grow: 0;
+  height: auto;
+  display: flex;
+  color: black;
+  font-weight: 600;
+  font-size: 1rem;
+  flex-basis: 0px;
+  flex: 0 1 auto;
 }
 
 .column {
@@ -283,6 +291,7 @@ nav {
   align-items: center;
   padding-left: 15px;
   padding-right: 15px;
+  padding-top: 15px;
   display: flex;
   flex-direction: column;
   padding-bottom: 1.5vmin;
@@ -299,7 +308,7 @@ nav {
   border-radius: 4px;
 }
 
-#logs, #time, #browserstack, #browsers, #platform {
+.detailsText {
   flex-grow: 0;
   height: auto;
   text-align: center;
@@ -311,20 +320,94 @@ nav {
   flex: 0 1 auto;
 }
 
-.sectionHeading, .testHeading {
-    width: 100%;
-    font-weight: 400;
-    font-size: 0;
-    text-transform: uppercase;
-    display: flex;
-    padding: 0;
-    margin: 0px auto;
-    font-size: 1rem;
-    text-align: left;
-    min-height: 30px;
-    max-height: 30px;
-    border-bottom: solid 2px #282c34;
-    color: black;
+.setting {
+  flex-grow: 0;
+  height: auto;
+  text-align: center;
+  display: flex;
+  color: black;
+  font-weight: 600;
+  font-size: 1rem;
+  flex-basis: 0px;
+  flex: 0 1 auto;
+}
+
+.folderSection {
+  width: 100%;
+  display: grid;
+  padding-left: 15px;
+  grid-gap: 5px;
+  margin-bottom: 5px;
+  flex-flow: column;
+  color: white;
+  text-align: left;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.folderHeading {
+  width: 100%;
+  font-weight: 400;
+  font-size: 0;
+  text-transform: uppercase;
+  display: flex;
+  padding: 0;
+  margin: 0px auto;
+  font-size: 1rem;
+  text-align: left;
+  min-height: 30px;
+  max-height: 30px;
+  border-bottom: solid 2px #282c34;
+  color: #282c34;
+  cursor: pointer;
+}
+
+.folderHeading > span {
+  vertical-align: middle;
+  font-weight: 600;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.suiteHeading {
+  margin-bottom: 10px;
+  width: 100%;
+  font-weight: 600;
+  font-size: 0;
+  display: flex;
+  padding: 0;
+  margin: 0px auto;
+  font-size: 1rem;
+  text-align: left;
+  min-height: 30px;
+  max-height: 30px;
+  color: #000000;
+  cursor: pointer;
+}
+
+.suiteHeading > span {
+  vertical-align: middle;
+  font-weight: 600;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+
+.sectionHeading {
+  width: 100%;
+  font-weight: 400;
+  font-size: 0;
+  text-transform: uppercase;
+  display: flex;
+  padding: 0;
+  margin: 0px auto;
+  font-size: 1rem;
+  text-align: left;
+  color: #282c34;
+}
+
+.underlined {
+  border-bottom: solid 2px #282c34;
 }
 
 .sectionHeading > span {
@@ -347,13 +430,11 @@ nav {
   width: 100%;
   display: grid;
   padding-left: 15px;
-  grid-gap: 5px;
-  margin-bottom: 5px;
+  grid-gap: 10px;
   flex-flow: column;
   color: white;
   text-align: left;
   font-weight: 400;
-  cursor: pointer;
 }
 
 .menuRow {
@@ -430,29 +511,6 @@ nav {
   background: linear-gradient(#000, #000) no-repeat center/2px 100%;
 }
 
-.suiteHeading {
-  margin-bottom: 10px;
-  opacity: 0.5;
-  width: 100%;
-  font-weight: 600;
-  font-size: 0;
-  display: flex;
-  padding: 0;
-  margin: 0px auto;
-  font-size: 1rem;
-  text-align: left;
-  min-height: 30px;
-  max-height: 30px;
-  color: #000000;
-}
-
-.suiteHeading > span {
-  vertical-align: middle;
-  font-weight: 600;
-  margin-top: auto;
-  margin-bottom: auto;
-}
-
 .dashed {
   border-bottom: 2px dashed #000000;
 }
@@ -498,7 +556,7 @@ nav {
 }
 
 .yellow, .skipped {
-  background-color: #FFF496;
+  background-color: #FFCB2E;
 }
 
 .greenBorder {
@@ -510,7 +568,7 @@ nav {
 }
 
 .yellowBorder {
-  border-right: 2px solid #FFF496;
+  border-right: 2px solid #FFCB2E;
 }
 
 .attachment {
@@ -539,6 +597,10 @@ nav {
 
 .greenText {
   color: #1abc9c;
+}
+
+.yellowText {
+  color: #FFCB2E;
 }
 
 .errorText {
@@ -593,4 +655,17 @@ nav {
   position: absolute;
   cursor: col-resize;
   margin-left: -18px;
+}
+
+#settings {
+  padding: 5px;
+  position: fixed;
+  background-color: #FFFFFF;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: 200px;
+  border: 1px solid #282c34;
+  border-radius: 5px;
 }

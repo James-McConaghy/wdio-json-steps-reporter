@@ -10,7 +10,7 @@ class TreeNode {
 
 const colour = {
     "failed": "#F56960",
-    "skipped": "#FFF496",
+    "skipped": "#FFCB2E",
     "passed": "#1abc9c"
 }
 
@@ -71,10 +71,10 @@ function render_folders_recursive(treeNode, depth, treeElement) {
 
 function prefab_HTML_menu_section(folder, depth) {
     const prefab = document.createElement('div')
-    prefab.classList = "section"
+    prefab.classList = "folderSection"
     prefab.style.paddingLeft = `${depth * 15}px`
     prefab.innerHTML = `
-    <div class="sectionHeading container row justified">
+    <div class="folderHeading container row justified">
         <span class="truncate"><i class="fa fa-angle-down" style="margin-right: 10px;" aria-hidden="true"></i>${folder}</span>
     </div>`
     prefab.firstElementChild.addEventListener('click', (e) => toggleFolderVisibility(e))
@@ -84,11 +84,8 @@ function prefab_HTML_menu_section(folder, depth) {
 function prefab_HTML_menu_rows(results, ignoreFilters) {
     const rows = []
     results.forEach(result => {
-        console.log("result hh", result)
         const filename = result.specs[0].split("/").pop()
-        console.log(result.state)
-        
-        if (filename.toLowerCase().includes(getFilterValue().toLowerCase()) && filterByStatus.some(status => result.state.state.includes(status))) { //&& filterByStatus.includes(result.state.state))) { // || (ignoreFilters && filterByStatus.includes(test.state))) {
+        if (filename.toLowerCase().includes(getFilterValue().toLowerCase()) && filterByStatus.some(status => result.state.state.includes(status))) { // || (ignoreFilters && filterByStatus.includes(test.state))) {
             const row = prefab_HTML_menu_row(filename, result.state.state)
             row.addEventListener('click', (e) => selectRow(e, result))
             rows.push(row)

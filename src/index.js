@@ -5,8 +5,8 @@ const mapHooks = require("./mapHooks")
 const mapTests = require("./mapTests")
 const initResultSet = require("./initResultSet")
 const generateWebReport = require("./generateWebReport")
-const saveFullPageScreenshot = require("./screenshot")
 const {step, steps} = require("./step")
+const {saveScreenshot, highlight, removeHighlight, removeHighlights} = require("./customCommands")
 
 class Reporter extends WDIOReporter {
 
@@ -35,9 +35,10 @@ class Reporter extends WDIOReporter {
         // Create the results folder tree for the current test being executed in the specified output directory
         // The folder strucutre will follow the same structure as the test files location
         if (this.options.logFile) {
-            const specName = runner.specs[0]         
+            const specName = runner.specs[0]  
+            const browserName = runner.capabilities.browserName
             const testResultPath = specName.substring(specName.indexOf(this.testsRootDir) + this.testsRootDir.length, specName.lastIndexOf("."))
-            this.resultPath = path.join(this.outputDir, testResultPath)
+            this.resultPath = path.join(this.outputDir, browserName, testResultPath)
             this.screenshotPath = path.join(this.resultPath, "screenshots")
             fsExtra.ensureDirSync(this.screenshotPath)  
         }
@@ -99,11 +100,7 @@ class Reporter extends WDIOReporter {
         if (stepOptions.createLog || stepOptions.takeScreenshot) {
             if (stepOptions.takeScreenshot) {
                 step.screenshotPath = path.join(this.screenshotPath, Date.now() + ".png")
-                if (stepOptions.takeScreenshot.toString().toLowerCase() != "viewport" && browser.capabilities.browserName.toLowerCase() == "chrome") {
-                    saveFullPageScreenshot(step.screenshotPath)
-                } else {
-                    browser.saveScreenshot(step.screenshotPath)
-                }
+                browser.saveScreenshot(step.screenshotPath, stepOptions.highlightElement)
             }
             this.delegatedStepsArray.push(step)
         }
@@ -132,21 +129,6 @@ class Reporter extends WDIOReporter {
                 let suite = this.suites[suiteKey]
 
                 suite.path = suite.path ? suite.path : this.resultPath + path.sep + suite.title             
-                //suite.suites.forEach((childSuite) => {
-                //    childSuite.path = suite.path + path.sep + childSuite.title
-
-                    //Add before all hooks to each child suite if hook belongs to suite
-                    // this.beforeAllHooksArray.filter(hook => suite.title === hook.parent).forEach(hook => {
-                    //     console.log("ADDING " + suite.title)
-                    //     console.log(hook)
-                    //     childSuite.hooks.unshift(hook)
-                    // })
-
-                    // //Add after all hooks to each child suite if hook belongs to suite
-                    // this.afterAllHooksArray.filter(hook => suite.title === hook.parent).forEach(hook => {
-                    //     childSuite.hooks.push(hook)
-                    // })
-                //})
 
                 if (suite.tests.length > 0) {
                     let testSuite = {}
@@ -202,7 +184,6 @@ class Reporter extends WDIOReporter {
                 let associatedSuite = orderedByAssociatedSuiteDepth.find(suite => {
                     return suite.uid == associatedSuiteUID
                 })
-                //associatedSuite.suites.push(removedSuite)
                 associatedSuite.suites = [...removedSuite, ...associatedSuite.suites]
             }
             
@@ -217,5 +198,9 @@ module.exports = {
     reporter: Reporter,
     step,
     steps,
-    generateWebReport
+    generateWebReport,
+    saveScreenshot,
+    highlight: highlight,
+    removeHighlight,
+    removeHighlights
 }

@@ -32,16 +32,28 @@ reporters: [
 ]
 ```
 
+#### Overwrite/Add custom commands to browser and element
+Overwrite and add the commands from the required StepsReporter.
+```javascript
+    before: function (capabilities, specs) {
+        browser.overwriteCommand("saveScreenshot", StepsReporter.saveScreenshot)
+        browser.addCommand("highlight", StepsReporter.highlight, true)
+        browser.addCommand("removeHighlight", StepsReporter.removeHighlight, true)
+        browser.addCommand("removeHighlights", StepsReporter.removeHighlights)
+    }
+```
+
 ##### Merge results to single file
 Finally on the completion of test execution use the required mergeResults function to generate a single JSON file which can be utilized by the react report dashboard. Alternatively you may wish to call this from a script as part of npm test. It is recommended to supply a unique value to ensure historic test records are kept especially 
 when utilizing the report dashboard to get the full benefits of it's features
-* @param[0] {string} : The outputDir where the results were logged by the StepsReporter. 
-* @param[1] {string} : The filename to be used for the generated single JSON file: defaults to Date.now()
+* @param {string} resultsDir : The resultsDir where the results were logged by the StepsReporter. 
 
 
 ```javascript
 onComplete: function(exitCode, config, capabilities, results) {
-    StepsReporter.mergeResults(`./results/${version}`, `${version}.json`)
+    StepsReporter.generateWebReport({
+        resultsDir: `./results/${version}`
+    }}
 }
 ```
 
@@ -69,8 +81,7 @@ before(function () {
 it("should have the correct title", function() {
     page.verifyPageTitle() //defaults = {createStep: true, takeScreenshot: false}
     page.verifyPageTitle({createStep: false) // no log will be generated in the report, the tasks will still be executed
-    page.verifyPageTitle({takeScreenshot: true}) //fullpage screenshot
-    page.verifyPageTitle({takeScreenshot: "viewport"}) //chrome only viewport screenshot
+    page.verifyPageTitle({takeScreenshot: true, highlightElement: $(".hero__subtitle")}) //fullpage screenshot, highlighting the title element
     page.verifyPageTitle({customDescription: "Override the description", customExpectation: "Override the expectation"}))
 })
 
@@ -79,19 +90,20 @@ verifyPageTitle(stepOptions?: StepOptions): void {
         "Verify the page title is correct",
         "The page title should be correct",
         "The page title was correct", () => {
-        const title = browser.getTitle()
-        expect(title).to.equal("WebdriverIO · Next-gen browser and mobile automation test framework for Node.js")
+        const title = $(".hero__subtitle")
+        expect(title).to.equal("Next-gen browser and mobile automation test framework for Node.js")
     })
 }
 ```
 
 ### Step Options
-The options, can be used to override any default page object actions steps that have been created. Defaults = {createStep: true, takeScreenshot: false}.
-The takeScreenshot parameter can accept a string value of "viewport" supported in chrome browser executions. Otherwise any other truthy value will attempt a full page capture
+The options can be used to override any default page object actions steps that have been created. Defaults = {createStep: true, takeScreenshot: false}.
+Additionally, an element can be passed in to be highlighted in the screenshot.
 ```javascript
     type StepOptions = {
         createLog: boolean;
-        takeScreenshot: boolean | string;
+        takeScreenshot: boolean;
+        highlightElement?: WebdriverIO.Element;
         customDescription?: string;
         customExpectation?: string;
         customActual?: string;
