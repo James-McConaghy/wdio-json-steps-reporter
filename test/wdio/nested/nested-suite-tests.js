@@ -1,11 +1,11 @@
 const expect = require("chai").expect
-const {step, steps} = require("../../src/step")
+const {step} = require("../../../src/step")
 
-describe("Single Steps : Getting Started", () => {
+describe("Depth 0", () => {
 
     before(function () {
         step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
-            browser.navigateTo("https://webdriver.io")
+            browser.url("https://webdriver.io")
         });
     })
 
@@ -17,38 +17,34 @@ describe("Single Steps : Getting Started", () => {
     })
 
     it("AC 1 should have the right title", () => {
-        //using a reusable page object action/assertion
-        verifyPageTitle({createLog: true, takeScreenshot: "viewport", highlightElement: $("h1.hero__title")})
+        verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
     })
 
-    it.skip("AC 2 test should be skipped", () => {
-        step({createLog: true, takeScreenshot: true}, "This test and child steps should be skipped", "This test and child steps should be skipped", "This test and child steps should be skipped", () => {
-            browser.deleteSession()
-        })
-    })
-
-    it("AC 3 test and step executed but NO step should be logged", () => {
-        step({createLog: false}, "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", () => {
-            browser.pause(3000)
-        })
-    })
-
-    it("AC 4 group step methods into single steps together", () => {
-        steps({createLog: true, takeScreenshot: true},
-            [
-                (stepOptions) => scrollPage(0, 2000, stepOptions)
-            ], 
-            [
-                (stepOptions) => verifyPageTitle(stepOptions)
-            ]
-        )
-    })
-
-    describe.skip("Depth 1: skipped", () => {
+    describe("Depth 1: first", () => {
       
-        it("AC 5 should be skipped", () => {
+        it("AC 2 should have the right title", () => {
             verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
         })
+    
+    }) 
+
+    describe("Depth 1: second", () => {
+      
+        it("AC 3 should have the right title", () => {
+            verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
+        })
+
+        describe("Depth 2: second", () => {
+      
+            it("AC 4 should have the right title", () => {
+                verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
+            })
+
+            it("AC 5 should have the right title", () => {
+                verifyPageTitle({createLog: true})
+            })
+        
+        }) 
     
     }) 
 

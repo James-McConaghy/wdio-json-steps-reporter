@@ -1,8 +1,9 @@
 {
   "name": "wdio-json-steps-reporter",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "A WebdriverIO plugin. Report step by step results in json format with screenshot support",
   "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
   "types": "./src/index.d.ts",
   "files": [
     "src"
@@ -30,21 +31,24 @@
   },
   "homepage": "https://github.com/James-McConaghy/wdio-json-steps-reporter#readme",
   "dependencies": {
-    "@wdio/cli": "^6.4.7",
-    "@wdio/reporter": "^6.4.7",
-    "fs-extra": "^9.0.0",
+    "@wdio/cli": "^7.1.1",
+    "@wdio/devtools-service": "^7.1.1",
+    "@wdio/local-runner": "^7.1.1",
+    "@wdio/mocha-framework": "^7.1.1",
+    "@wdio/reporter": "^7.1.1",
+    "fs-extra": "^9.1.0",
     "wdio": "^4.0.0",
-    "webdriverio": "^6.4.7"
+    "webdriverio": "^7.1.1"
   },
   "devDependencies": {
-    "@wdio/local-runner": "^6.4.7",
-    "@wdio/mocha-framework": "^6.4.7",
-    "@wdio/sync": "^6.4.7",
-    "chai": "^4.2.0",
-    "chromedriver": "^85.0.0",
-    "eslint": "^7.9.0",
+    "@wdio/sync": "^7.1.1",
+    "chai": "^4.3.3",
+    "chromedriver": "^89.0.0",
+    "eslint": "^7.21.0",
+    "geckodriver": "^1.22.2",
     "mocha": "^7.2.0",
-    "wdio-chromedriver-service": "^6.0.4"
+    "wdio-chromedriver-service": "^7.0.0",
+    "wdio-geckodriver-service": "^1.1.2"
   },
   "contributors": [
     "James McConaghy"
