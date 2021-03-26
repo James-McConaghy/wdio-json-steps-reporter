@@ -22,6 +22,10 @@ function buildTree(result, tree) {
 
     let currentDirectory = tree;
 
+    if (relativeHierarchy.length == 0) {
+        relativeHierarchy.push("/")
+    }
+
     for (let i = 0; i < relativeHierarchy.length; i++) {
 
         //Try to find the next directory in the current directory

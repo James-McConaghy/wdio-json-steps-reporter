@@ -60,7 +60,7 @@ when utilizing the report dashboard to get the full benefits of it's features
     onComplete: function(exitCode, config, capabilities, results) {
         StepsReporter.generateWebReport({
             resultsDir: `./results/${version}`
-        }}
+        })
     }
 ```
 
