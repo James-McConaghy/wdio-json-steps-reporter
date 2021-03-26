@@ -130,28 +130,27 @@ class Reporter extends WDIOReporter {
 
                 suite.path = suite.path ? suite.path : this.resultPath + path.sep + suite.title             
 
-                if (suite.tests.length > 0) {
-                    let testSuite = {}
-                    testSuite.uid = suite.uid
-                    testSuite.name = suite.title
-                    testSuite.duration = suite._duration
-                    testSuite.start = suite.start
-                    testSuite.end = suite.end
-                    testSuite.sessionId = runner.sessionId
-                    testSuite.associatedSuite = suite.associatedSuite
-                    testSuite.suites = []
-                    testSuite.tests = mapTests(suite.tests)
-                    testSuite.hooks = mapHooks(suite.hooks)
-                    testSuite.file = runner.specs[0].substring(runner.specs[0].lastIndexOf(path.sep) + 1, runner.specs[0].length)
-                    testSuite.testPath = runner.specs[0]
-                    testSuite.resultPath = this.resultPath
+                let testSuite = {}
+                testSuite.uid = suite.uid
+                testSuite.name = suite.title
+                testSuite.duration = suite._duration
+                testSuite.start = suite.start
+                testSuite.end = suite.end
+                testSuite.sessionId = runner.sessionId
+                testSuite.associatedSuite = suite.associatedSuite
+                testSuite.suites = []
+                testSuite.tests = mapTests(suite.tests)
+                testSuite.hooks = mapHooks(suite.hooks)
+                testSuite.file = runner.specs[0].substring(runner.specs[0].lastIndexOf(path.sep) + 1, runner.specs[0].length)
+                testSuite.testPath = runner.specs[0]
+                testSuite.resultPath = this.resultPath
 
-                    resultSet.state.failed += testSuite.hooks.filter(hook => hook.error).length
-                    resultSet.state.passed += testSuite.tests.filter(test => test.state === "passed").length
-                    resultSet.state.failed += testSuite.tests.filter(test => test.state === "failed").length
-                    resultSet.state.skipped += testSuite.tests.filter(test => test.state === "skipped").length
-                    resultSet.suites.push(testSuite)
-                }
+                resultSet.state.failed += testSuite.hooks.filter(hook => hook.error).length
+                resultSet.state.passed += testSuite.tests.filter(test => test.state === "passed").length
+                resultSet.state.failed += testSuite.tests.filter(test => test.state === "failed").length
+                resultSet.state.skipped += testSuite.tests.filter(test => test.state === "skipped").length
+                
+                resultSet.suites.push(testSuite)
             }
 
             resultSet.state.state = []
