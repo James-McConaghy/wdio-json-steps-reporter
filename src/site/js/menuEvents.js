@@ -9,14 +9,14 @@ function selectRow(e, result) {
 }
 
 function deselectAllRows() {
-    let rows = document.getElementsByClassName('menuRow')
+    let rows = document.getElementsByClassName("menuRow")
     for (let row of rows) {
         row.classList.remove("selected")
     }
 }
 
 function toggleFolderVisibility(e) {
-    let folderCollapsedIcon = e.currentTarget.getElementsByTagName('i')[0];    
+    let folderCollapsedIcon = e.currentTarget.getElementsByTagName("i")[0]
     let isOpen = folderCollapsedIcon.classList.contains("open")
     isOpen ? folderCollapsedIcon.classList.remove("open") : folderCollapsedIcon.classList.add("open")
 

@@ -20,10 +20,11 @@ class Reporter extends WDIOReporter {
         this.delegatedSuite = []
         this.delegatedTest = undefined
         this.delegatedStepsArray = undefined
-                
-        this.testsRootDir = path.sep + (options.testRootFolder ? options.testRootFolder.replace(/[\/\\]/g, '') : "test") + path.sep
-        this.outputDir = path.normalize(options.outputDir)
+
+        this.build = options.build ? options.build.toString() : "local"
+        this.outputDir = options.outputDir ? path.join(options.outputDir, this.build) : path.join("results/", build)
         
+        this.testDir = path.normalize(options.testDir || "test/")
         this.fileName = options.logFile
 
         process.on("step:log", (stepOptions, step) => {
@@ -37,7 +38,7 @@ class Reporter extends WDIOReporter {
         if (this.options.logFile) {
             const specName = runner.specs[0]  
             const browserName = runner.capabilities.browserName
-            const testResultPath = specName.substring(specName.indexOf(this.testsRootDir) + this.testsRootDir.length, specName.lastIndexOf("."))
+            const testResultPath = specName.substring(specName.indexOf(this.testDir) + this.testDir.length, specName.lastIndexOf("."))
             this.resultPath = path.join(this.outputDir, browserName, testResultPath)
             this.screenshotPath = path.join(this.resultPath, "screenshots")
             fsExtra.ensureDirSync(this.screenshotPath)  

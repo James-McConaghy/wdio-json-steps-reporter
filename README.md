@@ -29,12 +29,16 @@ Require the reporter in the wdio configuration file.
 ```
 
 ##### Use the reporter
-Configure wdio to use the required StepsReporter as a reporter. It is recommended to supply a unique value to ensure historic test records are kept especially when utilizing the react report dashboard to get the full benefits of it's features
+Configure wdio to use the required StepsReporter as a reporter.
 * @param {string} outputDir : The directory where the results will be logged. 
+* @param {string} testDir : The root directory where tests are stored 
+* @param {string | number} build : The version, jenkins build or name that the results will be stored under 
 ```javascript
     reporters: [
         [StepsReporter.reporter, {
-            outputDir: `./results/${version}`,
+            outputDir: "./results/",
+            testDir: "./test/",
+            build: 17
         }]
     ]
 ```
@@ -53,15 +57,24 @@ Overwrite and add the commands from the required StepsReporter.
 ##### Merge results to single file
 Finally on the completion of test execution use the required mergeResults function to generate a single JSON file which can be utilized by the react report dashboard. Alternatively you may wish to call this from a script as part of npm test. It is recommended to supply a unique value to ensure historic test records are kept especially 
 when utilizing the report dashboard to get the full benefits of it's features
-* @param {string} resultsDir : The resultsDir where the results were logged by the StepsReporter. 
-
-
+* @param {string} reportDir : The report directory where the html report will get generated to. 
+* @param {string} resultsDir : The results directory where the results were logged by the StepsReporter. 
+* @param {string} testDir : The root directory where tests are stored 
+* @param {string | number} build : The version, jenkins build or name that the html report will be generated for
 ```javascript
     onComplete: function(exitCode, config, capabilities, results) {
         StepsReporter.generateWebReport({
-            resultsDir: `./results/${version}`
+            reportDir: "./report/",
+            resultsDir: "./results/",
+            testDir: "./test/",
+            build: 17
         })
     }
+```
+
+##### Host the report on localhost
+```bash
+    npx http-server report/
 ```
 
 

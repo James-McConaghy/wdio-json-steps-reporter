@@ -61,72 +61,63 @@ nav {
   width: 100%;
 }
 
-#dropdown {
-  width: 100%;
+.select {
   position: relative;
-  list-style: none;
-  background-color: #282c34;
-  font-weight: 400;
-  font-size: 0;
-  display: inline-block;
-  padding: 0;
-  margin: 0px auto;
+  min-width: 200px;
 }
-
-#dropdown li {
-  font-size: 0.8rem;
-  display: inline-block;
-  position: relative;
-  padding: 15px 20px;
-  cursor: pointer;
-  z-index: 5;
-  min-width: 120px;
-  margin: 0;
-  text-align: center;
-}
-
-.drop {
-  overflow: auto;
-  list-style: none;
+.select svg {
   position: absolute;
-  padding: 0;
+  right: 12px;
+  top: calc(50% - 3px);
+  width: 10px;
+  height: 6px;
+  stroke-width: 2px;
+  stroke: #9098a9;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.select select {
+  -webkit-appearance: none;
+  padding: 7px 40px 7px 12px;
   width: 100%;
-  left: 0;
-  top: 48px;
-  text-align: center;
-  -webkit-transition: all 0.5s 0.1s;
-  -moz-transition: all 0.5s 0.1s;
-  -ms-transition: all 0.5s 0.1s;
-  transition: all 0.5s 0.1s;
-  max-height: 0px;
+  border: 1px solid #e8eaed;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 1px 3px -2px #9098a9;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  transition: all 150ms ease;
 }
-
-.drop div {
-  position: relative;
+.select select:required:invalid {
+  color: #5a667f;
 }
-
-.drop li {
-  display: block;
-  padding: 0;
-  width: 100%;
-  background: #282c34 !important;
+.select select option {
+  color: #223254;
 }
-
-.drop li:hover {
-  background: #2e323a !important;
+.select select option[value=""][disabled] {
+  display: none;
+}
+.select select:focus {
+  outline: none;
+  border-color: #07f;
+  box-shadow: 0 0 0 2px rgba(0,119,255,0.2);
+}
+.select select:hover + svg {
+  stroke: #07f;
+}
+.sprites {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  user-select: none;
 }
 
 .marker {
   border-bottom: 2px solid #374954;
-}
-
-#dropdown li:hover ul {
-  display: block;
-  -webkit-transform: translate(0, 0);
-  -moz-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  transform: translate(0, 0);
-  max-height: 400px;
 }
 
 #selectedVersion {
