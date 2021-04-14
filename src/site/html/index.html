@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Cache-control" content="no-cache">
     <title>Test Results</title>
     <link rel="stylesheet" href="./stylesheet.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -16,12 +17,20 @@
                     <h2>Test Results</h2>
                 </div>
                 <div class="headerSection">
-                    <form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
-                        <fieldset>
-                            <input type='file' id='fileinput'>
-                            <input type='button' id='btnLoad' value='Load' onclick='loadFile();'>
-                        </fieldset>
-                    </form>
+                    <label class="select" for="selectVersion">
+                        <select id="selectVerion" required="required">
+                            <option value="" disabled="disabled" selected="selected">Select option</option>
+                        </select>
+                        <svg>
+                            <use xlink:href="#select-arrow-down"></use>
+                        </svg>
+                    </label>
+                      <!-- SVG Sprites-->
+                    <svg class="sprites">
+                        <symbol id="select-arrow-down" viewbox="0 0 10 6">
+                            <polyline points="1 1 5 5 9 1"></polyline>
+                        </symbol>
+                    </svg>
                 </div>
             </div>
             <div class="container row" id="dashboard">

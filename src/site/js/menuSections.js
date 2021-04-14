@@ -8,6 +8,8 @@ class TreeNode {
 
 }
 
+let testDir = "/test/" // gets updated with loadBuildInfo() during init
+
 const colour = {
     "failed": "#F56960",
     "skipped": "#FFCB2E",
@@ -16,11 +18,11 @@ const colour = {
 
 function buildTree(result, tree) {
 
-    const relativePath = result.specs[0].substring(result.specs[0].lastIndexOf(specRoot) + specRoot.length)
+    const relativePath = result.specs[0].substring(result.specs[0].lastIndexOf(testDir) + testDir.length)
     const relativeHierarchy = relativePath.split("/")
     relativeHierarchy.pop() // remove the filename from the array, so we just have the desired folder structure
 
-    let currentDirectory = tree;
+    let currentDirectory = tree
 
     if (relativeHierarchy.length == 0) {
         relativeHierarchy.push("/")
@@ -74,14 +76,14 @@ function render_folders_recursive(treeNode, depth, treeElement) {
 }
 
 function prefab_HTML_menu_section(folder, depth) {
-    const prefab = document.createElement('div')
+    const prefab = document.createElement("div")
     prefab.classList = "folderSection"
     prefab.style.paddingLeft = `${depth * 15}px`
     prefab.innerHTML = `
     <div class="folderHeading container row justified">
         <span class="truncate"><i class="fa fa-angle-down" style="margin-right: 10px;" aria-hidden="true"></i>${folder}</span>
     </div>`
-    prefab.firstElementChild.addEventListener('click', (e) => toggleFolderVisibility(e))
+    prefab.firstElementChild.addEventListener("click", (e) => toggleFolderVisibility(e))
     return prefab
 }
 
@@ -91,7 +93,7 @@ function prefab_HTML_menu_rows(results, ignoreFilters) {
         const filename = result.specs[0].split("/").pop()
         if (filename.toLowerCase().includes(getFilterValue().toLowerCase()) && filterByStatus.some(status => result.state.state.includes(status))) { // || (ignoreFilters && filterByStatus.includes(test.state))) {
             const row = prefab_HTML_menu_row(filename, result.state.state)
-            row.addEventListener('click', (e) => selectRow(e, result))
+            row.addEventListener("click", (e) => selectRow(e, result))
             rows.push(row)
         }
     })
@@ -99,7 +101,7 @@ function prefab_HTML_menu_rows(results, ignoreFilters) {
 }
 
 function prefab_HTML_menu_row(text, state) {
-    const prefab = document.createElement('div')
+    const prefab = document.createElement("div")
     prefab.classList = "menuRow"
     prefab.innerHTML = `<div class="testName truncate">${text}</div><div style="background: linear-gradient(-90deg, ${colour[state[0]]} 50%, ${colour[state[state.length-1]]} 50%)" class="testStatus"></div></div>`
     return prefab

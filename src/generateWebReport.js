@@ -2,13 +2,39 @@ const fs = require("fs-extra")
 const path = require("path")
 
 module.exports = function generateWebReport(options) {
-    const resultsDir = options.resultsDir || "results"
-    const customFileName = options.customFilename || "merged-results.json"
-    const listOfResultsFiles = getListOfResultsFilesRecursivly(resultsDir)
-    const rawData = extractJSONFromResultsFiles(listOfResultsFiles)
-    const mergedResults = mergeData(rawData)
-    writeFile(resultsDir, mergedResults, customFileName)
-    buildReport(resultsDir)
+    const build = options.build ? options.build.toString() : "local"
+    const resultsDir = options.resultsDir ? path.normalize(options.resultsDir) : path.normalize("results/")
+    const reportDir = options.reportDir ? path.normalize(options.reportDir) : path.normalize("report/")
+    const testDir = path.normalize(options.testDir || "test/")
+
+    buildReport(reportDir, resultsDir, build, testDir)
+}
+
+function buildReport(reportDir, resultsDir, build, testDir) {
+    const reportPath = path.join(reportDir, resultsDir)
+    const buildPath = path.join(reportPath, build)
+    const srcDirJS = path.join(__dirname, "/site/js/")
+    const srcDirCSS = path.join(__dirname, "/site/css/")
+    const srcDirHTML = path.join(__dirname, "/site/html/")
+
+    // Delete existing report under build and ensure folder exists after
+    fs.removeSync(buildPath, { recursive: true, force: true })
+    fs.ensureDirSync(buildPath) 
+
+    // Copy results into report build directory
+    fs.copySync(resultsDir, reportPath)
+
+    // Copy / aggregate and move HTML, CSS, JS into report directory
+    fs.copyFileSync(path.join(srcDirHTML, "index.html"), path.join(reportDir, "index.html"))
+    aggregateFilesIntoFolder(srcDirJS, path.join(reportDir, "script.js"))
+    aggregateFilesIntoFolder(srcDirCSS, path.join(reportDir, "stylesheet.css"))
+
+    // Write JSON into report / build
+    const listOfResultsFiles = getListOfResultsFilesRecursivly(buildPath)
+    const rawJSONResults = extractJSONFromResultsFiles(listOfResultsFiles)
+    const mergedJSONResults = mergeJSONResults(rawJSONResults)
+    writeJSONFile(buildPath, "merged-results.json", mergedJSONResults)
+    writeJSONFile(reportDir, "buildInfo.json", generateBuildInfo(buildPath, testDir))
 }
 
 function getListOfResultsFilesRecursivly(resultsDir, foundItems, listOfFiles) {
@@ -35,7 +61,7 @@ function extractJSONFromResultsFiles(listOfFiles) {
     return extractedJSON
 }
 
-function mergeData(rawData) {
+function mergeJSONResults(rawData) {
 
     const aggregatedReport = {
         passed: 0,
@@ -57,33 +83,31 @@ function mergeData(rawData) {
     return aggregatedReport
 }
 
-function writeFile(dir, mergedResults, fileName) {
-    const filePath = path.join(dir, fileName)
-    fs.writeFileSync(filePath, JSON.stringify(mergedResults))
+function writeJSONFile(directory, filename, json) {
+    const filePath = path.join(directory, filename)
+    fs.writeFileSync(filePath, JSON.stringify(json))
 }
 
-
-function buildReport(resultsDir) {
-    const buildDir = "./report/"
-    const targetDir = resultsDir.replace("./", buildDir)
-    const srcDirJS = __dirname + "/site/js/"
-    const srcDirCSS = __dirname + "/site/css/"
-    const srcDirHTML = __dirname + "/site/html/"
-    
-    fs.rmdirSync(targetDir, { recursive: true });
-    fs.ensureDirSync(buildDir)
-    fs.ensureDirSync(targetDir) 
-    fs.copySync(resultsDir, targetDir)
-    fs.copyFileSync(srcDirHTML+"index.html", buildDir+"index.html")
-    mergeToBuild(srcDirJS, buildDir+"script.js")
-    mergeToBuild(srcDirCSS, buildDir+"stylesheet.css")
-}
-
-function mergeToBuild(srcDir, buildFile) {
+function aggregateFilesIntoFolder(srcDir, buildFile) {
     fs.existsSync(buildFile) ? fs.unlinkSync(buildFile) : null
     let files = fs.readdirSync(srcDir)
     files.forEach(file => {
         let content = fs.readFileSync(srcDir + file)
         fs.appendFileSync(buildFile, content + "\n\n")
     })
-}  
+}
+
+function generateBuildInfo(resultsDir, testDir) {
+    
+    if (resultsDir.endsWith(path.sep)) { resultsDir = resultsDir.slice(0, -1)}
+
+    let build = resultsDir.split(path.sep).pop()
+    if (build.match(/^[0-9]+$/) != null) {
+        build = parseInt(build)
+    }
+
+    return json = {
+        "build": build,
+        "testDir": path.normalize(path.sep + testDir + path.sep)
+    }
+}

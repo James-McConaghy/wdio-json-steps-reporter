@@ -130,7 +130,9 @@ exports.config = {
     // see also: https://webdriver.io/docs/dot-reporter.html
     reporters: [
         [StepsReporter.reporter, {
-            outputDir: `./results/${version}`,
+            outputDir: "./results/",
+            testDir: "./test/",
+            build: 17
         }]
     ],
  
@@ -267,7 +269,10 @@ exports.config = {
      */
     onComplete: function(exitCode, config, capabilities, results) {
         StepsReporter.generateWebReport({
-            resultsDir: `./results/${version}`
+            reportDir: "./report/",
+            resultsDir: "./results/",
+            testDir: "./test/",
+            build: 17
         })
     }
     /**
