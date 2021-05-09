@@ -132,7 +132,7 @@ exports.config = {
         [StepsReporter.reporter, {
             outputDir: "./results/",
             testDir: "./test/",
-            build: 17
+            build: 20
         }]
     ],
  
@@ -272,7 +272,7 @@ exports.config = {
             reportDir: "./report/",
             resultsDir: "./results/",
             testDir: "./test/",
-            build: 17
+            build: 20
         })
     }
     /**

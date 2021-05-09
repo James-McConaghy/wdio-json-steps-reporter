@@ -11,11 +11,12 @@ module.exports = function generateWebReport(options) {
 }
 
 function buildReport(reportDir, resultsDir, build, testDir) {
-    const reportPath = path.join(reportDir, resultsDir)
+    const reportPath = path.join(reportDir, "/public/", resultsDir)
     const buildPath = path.join(reportPath, build)
     const srcDirJS = path.join(__dirname, "/site/js/")
     const srcDirCSS = path.join(__dirname, "/site/css/")
     const srcDirHTML = path.join(__dirname, "/site/html/")
+    const srcServer = path.join(__dirname, "/site/server/")
 
     // Delete existing report under build and ensure folder exists after
     fs.removeSync(buildPath, { recursive: true, force: true })
@@ -25,16 +26,17 @@ function buildReport(reportDir, resultsDir, build, testDir) {
     fs.copySync(resultsDir, reportPath)
 
     // Copy / aggregate and move HTML, CSS, JS into report directory
-    fs.copyFileSync(path.join(srcDirHTML, "index.html"), path.join(reportDir, "index.html"))
-    aggregateFilesIntoFolder(srcDirJS, path.join(reportDir, "script.js"))
-    aggregateFilesIntoFolder(srcDirCSS, path.join(reportDir, "stylesheet.css"))
+    fs.copyFileSync(path.join(srcDirHTML, "index.html"), path.join(reportDir, "/public/", "index.html"))
+    fs.copyFileSync(path.join(srcServer, "server.js"), path.join(reportDir, "server.js"))
+    aggregateFilesIntoFolder(srcDirJS, path.join(reportDir, "/public/", "script.js"))
+    aggregateFilesIntoFolder(srcDirCSS, path.join(reportDir, "/public/", "stylesheet.css"))
 
     // Write JSON into report / build
     const listOfResultsFiles = getListOfResultsFilesRecursivly(buildPath)
     const rawJSONResults = extractJSONFromResultsFiles(listOfResultsFiles)
     const mergedJSONResults = mergeJSONResults(rawJSONResults)
     writeJSONFile(buildPath, "merged-results.json", mergedJSONResults)
-    writeJSONFile(reportDir, "buildInfo.json", generateBuildInfo(buildPath, testDir))
+    writeJSONFile(reportDir, "/public/buildInfo.json", generateBuildInfo(buildPath, testDir))
 }
 
 function getListOfResultsFilesRecursivly(resultsDir, foundItems, listOfFiles) {
@@ -85,6 +87,7 @@ function mergeJSONResults(rawData) {
 
 function writeJSONFile(directory, filename, json) {
     const filePath = path.join(directory, filename)
+    console.log(filePath)
     fs.writeFileSync(filePath, JSON.stringify(json))
 }
 
