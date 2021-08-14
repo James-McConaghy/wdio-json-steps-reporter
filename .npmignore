@@ -4,6 +4,7 @@ npm-debug.log
 .vscode/
 test/
 results/
+report/
 wdio.conf.js
 .mocharc.js
 .eslintrc.js

@@ -6,7 +6,7 @@ describe("Single Steps : Getting Started", () => {
     before(function () {
         step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
             browser.url("https://webdriver.io")
-        });
+        })
     })
 
     beforeEach(function () {

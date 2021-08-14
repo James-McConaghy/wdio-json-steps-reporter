@@ -74,7 +74,7 @@ when utilizing the report dashboard to get the full benefits of it's features
 
 ##### Host the report on localhost
 ```bash
-    npx http-server report/
+    node report/server.js
 ```
 
 
