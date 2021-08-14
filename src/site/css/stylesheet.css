@@ -53,10 +53,6 @@ a {
   box-sizing: border-box;
 }
 
-nav {
-  width: 100%;
-}
-
 .full-width {
   width: 100%;
 }
@@ -172,7 +168,7 @@ nav {
   display: flex;
   color: black;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 14px;
   margin-bottom: 3vmin;
 }
 
@@ -181,14 +177,12 @@ nav {
   color: white;
   text-align: left;
   border-radius: 4px;
-  font-size: 0.8rem;
-
+  font-size: 14px;
   flex-grow: 0;
   height: auto;
   display: flex;
   color: black;
   font-weight: 600;
-  font-size: 1rem;
   flex-basis: 0px;
   flex: 0 1 auto;
 }
@@ -221,7 +215,7 @@ nav {
   text-align: center;
   color: black;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 16px;
   display: flex;
   flex: 0 1 auto;
 }
@@ -306,7 +300,7 @@ nav {
   display: flex;
   color: black;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 14px;
   flex-basis: 0px;
   flex: 0 1 auto;
 }
@@ -318,7 +312,7 @@ nav {
   display: flex;
   color: black;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 14px;
   flex-basis: 0px;
   flex: 0 1 auto;
 }
@@ -344,7 +338,7 @@ nav {
   display: flex;
   padding: 0;
   margin: 0px auto;
-  font-size: 1rem;
+  font-size: 14px;
   text-align: left;
   min-height: 30px;
   max-height: 30px;
@@ -368,7 +362,7 @@ nav {
   display: flex;
   padding: 0;
   margin: 0px auto;
-  font-size: 1rem;
+  font-size: 14px;
   text-align: left;
   min-height: 30px;
   max-height: 30px;
@@ -392,7 +386,7 @@ nav {
   display: flex;
   padding: 0;
   margin: 0px auto;
-  font-size: 1rem;
+  font-size: 14px;
   text-align: left;
   color: #282c34;
 }
@@ -409,7 +403,7 @@ nav {
 }
 
 .filename {
-  font-size: 0.5rem;
+  font-size: 10px;
   color: orangered
 }
 
@@ -452,7 +446,7 @@ nav {
 
 .testName, .stepName, .logName {
   margin: auto 1vmin;
-  font-size: 0.8rem;
+  font-size: 12px;
   text-align: left; 
   flex: 1 1 0px;
   line-height: 30px;
@@ -460,7 +454,7 @@ nav {
 
 .stepText {
   margin: auto 1vmin;
-  font-size: 0.8rem;
+  font-size: 12px;
   text-align: left; 
   flex: 1 1 0px;
   line-height: 30px;

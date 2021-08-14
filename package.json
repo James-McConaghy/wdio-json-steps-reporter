@@ -45,7 +45,7 @@
     "@wdio/mocha-framework": "^7.1.1",
     "@wdio/sync": "^7.1.1",
     "chai": "^4.3.3",
-    "chromedriver": "^89.0.0",
+    "chromedriver": "^91.0.1",
     "eslint": "^7.21.0",
     "geckodriver": "^1.22.2",
     "mocha": "^7.2.0",

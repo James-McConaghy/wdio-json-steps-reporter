@@ -7,62 +7,62 @@ function displayTest(test) {
             <span>Test Path</span>
         </div>
         <div class="container row end detailsSection detailsText">
-            <div class="tag"><div class="logName">${test.specs[0]}</div></div>
+            <div class=""><div class="logName">${test.specs[0]}</div></div>
         </div>
         <div class="sectionHeading right">
             <span>Platform</span>
         </div>
         <div class="container row end detailsSection detailsText">
-            <div class="tag"><div class="logName">${test.capabilities.platformName}</div></div>
+            <div class=""><div class="logName">${test.capabilities.platformName}</div></div>
         </div>
         <div class="sectionHeading right">
             <span>Browser</span>
         </div>
         <div class="container row end detailsSection detailsText">
-            <div class="tag"><div class="logName">${test.capabilities.browserName}</div></div>
+            <div class=""><div class="logName">${test.capabilities.browserName}</div></div>
         </div>
         <div class="sectionHeading right">
             <span>Start Date </span>
         </div>
         <div class="container row end detailsSection detailsText">
-            <div class="tag"><div class="logName">${test.start}</div></div>
+            <div class=""><div class="logName">${test.start}</div></div>
         </div>
         <div class="sectionHeading right">
         <span>End Date</span>
         </div>
         <div class="container row end detailsSection detailsText">
-            <div class="tag"><div class="logName">${test.end}</div></div>
+            <div class=""><div class="logName">${test.end}</div></div>
         </div>
         <div class="sectionHeading right">
             <span>Duration</span>
         </div>
         <div class="container row end detailsSection detailsText">
-            <div class="tag"><div class="logName">${convertMS(new Date(test.end).getTime() - new Date(test.start).getTime())}</div></div>
+            <div class=""><div class="logName">${convertMS(new Date(test.end).getTime() - new Date(test.start).getTime())}</div></div>
         </div>
         <div class="sectionHeading right">
             <span>Passed </span>
         </div>
         <div class="container row end detailsSection detailsText">
-            <div class="tag"><div class="logName">${test.state.passed}</div></div>
+            <div class=""><div class="logName">${test.state.passed}</div></div>
         </div>
         <div class="sectionHeading right">
             <span>Skipped </span>
         </div>
         <div class="container row end detailsSection detailsText">
-            <div class="tag"><div class="logName">${test.state.skipped}</div></div>
+            <div class=""><div class="logName">${test.state.skipped}</div></div>
         </div>
         <div class="sectionHeading right">
             <span>Failed </span>
         </div>
         <div class="container row end detailsSection detailsText">
-            <div class="tag"><div class="logName">${test.state.failed}</div></div>
+            <div class=""><div class="logName">${test.state.failed}</div></div>
         </div>
         ${!test.capabilities.session ? '' :
         `<div class="sectionHeading right">
                 <span>Browserstack</span>
             </div>
             <div class="container row end detailsSection detailsText">
-                <div class="tag"><div class="logName">${test.capabilities.session}</div></div>
+                <div class=""><div class="logName">${test.capabilities.session}</div></div>
             </div>`}`
 }
 

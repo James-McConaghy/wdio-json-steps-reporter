@@ -6,7 +6,7 @@ describe("Depth 0", () => {
     before(function () {
         step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
             browser.url("https://webdriver.io")
-        });
+        })
     })
 
     beforeEach(function () {
@@ -66,7 +66,7 @@ describe("Depth 0", () => {
 function scrollPage(x, y, stepOptions) {
     return step(stepOptions, `Scroll the page by ${x}, ${y}`, `The page should have scrolled by ${x}, ${y}`, `The page scrolled by ${x}, ${y}`, () => {
         browser.execute((x, y) => scrollBy(x, y), x, y)
-    });
+    })
 }
 
 //reusable page assertions
@@ -75,7 +75,7 @@ function verifyPageTitle(stepOptions) {
         "Verify the page title is correct", 
         "The page title should be correct", 
         "The title was correct", () => {
-        const title = browser.getTitle()
-        expect(title).to.include("WebdriverIO")
-    })
+            const title = browser.getTitle()
+            expect(title).to.include("WebdriverIO")
+        })
 }
