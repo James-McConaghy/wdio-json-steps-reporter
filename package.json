@@ -47,7 +47,7 @@
     "chai": "^4.3.3",
     "chromedriver": "^91.0.1",
     "eslint": "^7.21.0",
-    "geckodriver": "^1.22.2",
+    "geckodriver": "^2.0.2",
     "mocha": "^7.2.0",
     "wdio-chromedriver-service": "^7.0.0",
     "wdio-geckodriver-service": "^1.1.2",
