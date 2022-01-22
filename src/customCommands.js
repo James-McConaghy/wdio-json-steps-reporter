@@ -1,41 +1,41 @@
 const path = require("path")
 const fs = require("fs")
 
-function saveScreenshot(originalFunction, filepath, element) {
+async function saveScreenshot(originalFunction, filepath, element) {
     try {
-        const fullPageDimensions = browser.execute(() => {
+        const fullPageDimensions = await browser.execute(() => {
             const x = Math.max(window.innerWidth, document.body.scrollWidth, document.documentElement.scrollWidth) || 0
             const y = Math.max(window.innerHeight, document.body.scrollHeight, document.documentElement.scrollHeight) || 0
             const scale = window.devicePixelRatio || 1
             const mobile = typeof window.orientation !== "undefined"
             return { width: x, height: y, deviceScaleFactor: scale, mobile: mobile }
         })
-        browser.sendCommandAndGetResult("Emulation.setDeviceMetricsOverride", fullPageDimensions)
+        await browser.sendCommandAndGetResult("Emulation.setDeviceMetricsOverride", fullPageDimensions)
 
         if (element) {
-            element.highlight()
+            await element.highlight()
         }
 
-        const screenshot = browser.sendCommandAndGetResult("Page.captureScreenshot", {
+        const screenshot = await browser.sendCommandAndGetResult("Page.captureScreenshot", {
             "format": "png",
             "fromSurface": true,
             "clip": { x: 0, y: 0, width: fullPageDimensions.width, height: fullPageDimensions.height, scale: 1 }
         })
-        browser.sendCommandAndGetResult("Emulation.clearDeviceMetricsOverride", {})
+        await browser.sendCommandAndGetResult("Emulation.clearDeviceMetricsOverride", {})
 
         if (element) {
-            element.removeHighlight()
+            await element.removeHighlight()
         }
 
         const screenBuffer = Buffer.from(screenshot.data, "base64")
         fs.writeFileSync(filepath, screenBuffer)
     } catch (error) {
-        originalFunction(filepath)
+        await originalFunction(filepath)
     }
 }
 
-function highlight() {
-    browser.execute((element) => {
+async function highlight() {
+    await browser.execute((element) => {
         let bounds = element.getBoundingClientRect()
         let highlight = document.createElement("div")
         highlight.id = `customHighlight_${this.elementId}`
@@ -50,14 +50,14 @@ function highlight() {
     }, this)
 }
 
-function removeHighlight() {
-    browser.execute(() => {
+async function removeHighlight() {
+    await browser.execute(() => {
         document.getElementById(`customHighlight_${this.elementId}`).remove()
     }, this)
 }
 
-function removeHighlights() {
-    browser.execute(() => {
+async function removeHighlights() {
+    await browser.execute(() => {
         document.querySelectorAll(".customHighlight").forEach(i => i.remove())
     })
 }

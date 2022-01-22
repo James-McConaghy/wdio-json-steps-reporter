@@ -71,19 +71,23 @@ class Reporter extends WDIOReporter {
     onHookEnd(hook) {
         switch (hook.title.split("\"")[1]) {
         case "before all":
+            hook.type = "before all"
             this.beforeAllHooksArray.push(hook)
-            hook.associatedTest = "*"  
+            hook.associatedTest = "*"
             break
         case "before each":
+            hook.type = "before each"
             hook.associatedTest = this.delegatedTest.title
             this.delegatedStepsArray = this.delegatedTest.steps
             break
         case "after each":
+            hook.type = "after each"
             hook.associatedTest = this.delegatedTest.title
             this.delegatedStepsArray = this.delegatedTest.steps
             break
         case "after all":
-            hook.associatedTest = "*"  
+            hook.type = "after all"
+            hook.associatedTest = "*"
             this.afterAllHooksArray.push(hook)
             break
         default:
@@ -122,7 +126,7 @@ class Reporter extends WDIOReporter {
     }
 
     prepareJson(runner) {
-        let resultSet = initResultSet(runner)
+        let resultSet = initResultSet(runner, this.testDir)
 
         for (const specId of Object.keys(runner.specs)) {
             resultSet.specs.push(runner.specs[specId])

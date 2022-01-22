@@ -1,12 +1,10 @@
-/// <reference types="@wdio/sync/webdriverio-core" />
-
 declare module "wdio-json-steps-reporter" {
 
     type Step = {
         description: string;
         expectation: string;
         actual: string;
-        status: string;
+        state: string;
         error?: string;
         screenshotPath?: string;
     }
@@ -37,7 +35,7 @@ declare module "wdio-json-steps-reporter" {
         * @param {Function} tasks to be executed by the webdriver
         * @return {Action | Assertion} The Step log object that will be used in the resulting json results and combined Steps wrapper.
     */
-    function step(stepOptions: StepOptions, description: string, expectation: string, actual: string, tasks: Function): Action | Assertion;
+    function step(stepOptions: StepOptions, description: string, expectation: string, actual: string, tasks: Function): Promise<Action> | Promise<Assertion>;
 
     /**
      * The steps (plural) wrapper, similar to the single step wrapper can be used to generate a single log and screenshot for multiple Actions/Assertions
@@ -57,7 +55,7 @@ declare module "wdio-json-steps-reporter" {
         * 
         * 
     */
-    function steps(stepOptions: StepOptions, actions: Action[], assertions: Assertion[]): void;  
+    function steps(stepOptions: StepOptions, actions: Action[], assertions: Assertion[]): Promise<void>;  
 
 
     namespace Element {
@@ -65,18 +63,18 @@ declare module "wdio-json-steps-reporter" {
          * Highlights the element with a red border style.
          * 
         */
-        export function highlight(): void
+        export function highlight(): Promise<void>
 
         /**
          * Removes the highlight style on the current element.
          * 
         */
-        export function removeHighlight(): void
+        export function removeHighlight(): Promise<void>
     }
     
     namespace Browser {
 
-        export function saveScreenshot(filepath: string): Buffer
+        export function saveScreenshot(filepath: string): Promise<Buffer>
 
         /**
          * This method overwrites the default wdio saveScreenshot, allowing an Element Selector to be passed in 
@@ -86,22 +84,22 @@ declare module "wdio-json-steps-reporter" {
             * @param {WebdriverIO.Element]} element The element to be highlighted.
             * 
         */
-        export function saveScreenshot(filepath: string, element: WebdriverIO.Element): void
+        export function saveScreenshot(filepath: string, element: WebdriverIO.Element): Promise<void>
 
         /**
          * This method will remove all highlight styles that have been applied to elements on the current DOM.
          * 
         */
-        export function removeHighlights(): void
+        export function removeHighlights(): Promise<void>
     }
 
 }
 
-declare namespace WebdriverIO {
+declare module WebdriverIO {
 
     // adding command to `browser`
-    export interface Browser {
-        saveScreenshot(filepath: string): Buffer
+    interface Browser {
+        saveScreenshot(filepath: string): Promise<Buffer>
 
         /**
          * This method overwrites the default wdio saveScreenshot, allowing an Element Selector to be passed in 
@@ -111,28 +109,28 @@ declare namespace WebdriverIO {
             * @param {WebdriverIO.Element]} element The element to be highlighted.
             * 
         */
-        saveScreenshot(filepath: string, element: WebdriverIO.Element): void
+        saveScreenshot(filepath: string, element: WebdriverIO.Element): Promise<void>
 
         /**
          * This method will remove all highlight styles that have been applied to elements on the current DOM.
          * 
         */
-        removeHighlights(): void
+        removeHighlights(): Promise<void>
     }
 
     // adding command to `element`
-    export interface Element {
+    interface Element {
         /**
          * Highlights the element with a red border style.
          * 
         */
-        highlight(): void
+        highlight(): Promise<void>
 
         /**
          * Removes the highlight style on the current element.
          * 
         */
-        removeHighlight(): void
+        removeHighlight(): Promise<void>
     }
 
 }

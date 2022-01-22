@@ -12,21 +12,21 @@
     * @param {Function} tasks to be executed by the webdriver
     * @return {Action | Assertion} The Step log object that will be used in the resulting json results and combined Steps wrapper.
 */
-function step(stepOptions = {createLog: true, takeScreenshot: false}, description, expectation, actual, tasks) {
+async function step(stepOptions = {createLog: true, takeScreenshot: false}, description, expectation, actual, tasks) {
     const step = {
         description: stepOptions.customDescription || description,
         expectation: stepOptions.customExpectation || expectation,
         actual: "",
-        status: "pending"
+        state: "pending"
     }
     try {
         tasks()
         step.actual = stepOptions.customActual || actual
-        step.status = "passed"
+        step.state = "passed"
     }
     catch (error) {
         step.error = error
-        step.status = "failed"
+        step.state = "failed"
         stepOptions.takeScreenshot = true
     }
     finally {
@@ -53,12 +53,12 @@ function step(stepOptions = {createLog: true, takeScreenshot: false}, descriptio
     * 
     * 
 */
-function steps(stepOptions = {createLog: true, takeScreenshot: false}, actions, assertions) {
+async function steps(stepOptions = {createLog: true, takeScreenshot: false}, actions, assertions) {
     const step = {
         description: [],
         expectation: [],
         actual: [],
-        status: "pending"
+        state: "pending"
     }
     try {
         actions.forEach(action => {
@@ -73,11 +73,11 @@ function steps(stepOptions = {createLog: true, takeScreenshot: false}, actions, 
             step.expectation.push(completedAssertion.expectation)
             step.actual.push(completedAssertion.actual)
         });
-        step.status = "passed"
+        step.state = "passed"
     }
     catch (error) {
         step.error = error
-        step.status = "failed"
+        step.state = "failed"
         stepOptions.takeScreenshot = true
     }
     finally {
