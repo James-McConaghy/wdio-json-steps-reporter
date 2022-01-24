@@ -12,7 +12,6 @@ declare module "wdio-json-steps-reporter" {
     type StepOptions = {
         createLog: boolean;
         takeScreenshot: boolean;
-        highlightElement?: WebdriverIO.Element;
         customDescription?: string;
         customExpectation?: string;
         customActual?: string;
@@ -35,7 +34,7 @@ declare module "wdio-json-steps-reporter" {
         * @param {Function} tasks to be executed by the webdriver
         * @return {Action | Assertion} The Step log object that will be used in the resulting json results and combined Steps wrapper.
     */
-    function step(stepOptions: StepOptions, description: string, expectation: string, actual: string, tasks: Function): Promise<Action> | Promise<Assertion>;
+    function step(stepOptions: StepOptions, description: string, expectation: string, actual: string, tasks: Function)
 
     /**
      * The steps (plural) wrapper, similar to the single step wrapper can be used to generate a single log and screenshot for multiple Actions/Assertions
@@ -55,7 +54,7 @@ declare module "wdio-json-steps-reporter" {
         * 
         * 
     */
-    function steps(stepOptions: StepOptions, actions: Action[], assertions: Assertion[]): Promise<void>;  
+    function steps(stepOptions: StepOptions, actions: Action[], assertions: Assertion[])
 
 
     namespace Element {
@@ -63,7 +62,7 @@ declare module "wdio-json-steps-reporter" {
          * Highlights the element with a red border style.
          * 
         */
-        export function highlight(): Promise<void>
+        export function highlight()
 
         /**
          * Removes the highlight style on the current element.
@@ -74,7 +73,7 @@ declare module "wdio-json-steps-reporter" {
     
     namespace Browser {
 
-        export function saveScreenshot(filepath: string): Promise<Buffer>
+        export function saveScreenshot(filepath: string)
 
         /**
          * This method overwrites the default wdio saveScreenshot, allowing an Element Selector to be passed in 
@@ -84,13 +83,13 @@ declare module "wdio-json-steps-reporter" {
             * @param {WebdriverIO.Element]} element The element to be highlighted.
             * 
         */
-        export function saveScreenshot(filepath: string, element: WebdriverIO.Element): Promise<void>
+        export function saveScreenshot(filepath: string, element: WebdriverIO.Element)
 
         /**
          * This method will remove all highlight styles that have been applied to elements on the current DOM.
          * 
         */
-        export function removeHighlights(): Promise<void>
+        export function removeHighlights()
     }
 
 }
@@ -99,7 +98,7 @@ declare module WebdriverIO {
 
     // adding command to `browser`
     interface Browser {
-        saveScreenshot(filepath: string): Promise<Buffer>
+        saveScreenshot(filepath: string)
 
         /**
          * This method overwrites the default wdio saveScreenshot, allowing an Element Selector to be passed in 
@@ -109,13 +108,13 @@ declare module WebdriverIO {
             * @param {WebdriverIO.Element]} element The element to be highlighted.
             * 
         */
-        saveScreenshot(filepath: string, element: WebdriverIO.Element): Promise<void>
+        saveScreenshot(filepath: string, element: WebdriverIO.Element)
 
         /**
          * This method will remove all highlight styles that have been applied to elements on the current DOM.
          * 
         */
-        removeHighlights(): Promise<void>
+        removeHighlights()
     }
 
     // adding command to `element`
@@ -124,13 +123,13 @@ declare module WebdriverIO {
          * Highlights the element with a red border style.
          * 
         */
-        highlight(): Promise<void>
+        highlight()
 
         /**
          * Removes the highlight style on the current element.
          * 
         */
-        removeHighlight(): Promise<void>
+        removeHighlight()
     }
 
 }

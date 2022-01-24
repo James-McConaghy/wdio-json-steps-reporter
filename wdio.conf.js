@@ -21,7 +21,7 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        "./test/**/*.js"
+        "./test/**/root-test.js"
     ],
     // Patterns to exclude.
     exclude: [
@@ -50,19 +50,6 @@ exports.config = {
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
     capabilities: [{
-    
-        // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-        // grid with only 5 firefox instances available you can make sure that not more than
-        // 5 instances get started at a time.
-        maxInstances: 5,
-        //
-        browserName: "firefox",
-        // If outputDir is provided WebdriverIO can capture driver session logs
-        // it is possible to configure which logTypes to include/exclude.
-        // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
-        // excludeDriverLogs: ['bugreport', 'server'],
-    },
-    {
     
         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
         // grid with only 5 firefox instances available you can make sure that not more than
@@ -122,7 +109,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ["geckodriver", "chromedriver"],
+    services: ["chromedriver"],
     
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -145,7 +132,7 @@ exports.config = {
         [StepsReporter.reporter, {
             outputDir: "./results/",
             testDir: "./test/",
-            build: 22
+            build: 3
         }]
     ],
  
@@ -197,11 +184,11 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
-    before: function (capabilities, specs) {
-        browser.overwriteCommand("saveScreenshot", customCommands.saveScreenshot)
-        browser.addCommand("highlight", customCommands.highlight, true)
-        browser.addCommand("removeHighlight", customCommands.removeHighlight, true)
-        browser.addCommand("removeHighlights", customCommands.removeHighlights)
+    before: async function (capabilities, specs) {
+        await browser.overwriteCommand("saveScreenshot", customCommands.saveScreenshot)
+        await browser.addCommand("highlight", customCommands.highlight, true)
+        await browser.addCommand("removeHighlight", customCommands.removeHighlight, true)
+        await browser.addCommand("removeHighlights", customCommands.removeHighlights)
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -280,12 +267,12 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
-    onComplete: function(exitCode, config, capabilities, results) {
-        StepsReporter.generateWebReport({
+    onComplete: async function(exitCode, config, capabilities, results) {
+        await StepsReporter.generateWebReport({
             reportDir: "./report/",
             resultsDir: "./results/",
             testDir: "./test/",
-            build: 22
+            build: 3
         })
     }
     /**

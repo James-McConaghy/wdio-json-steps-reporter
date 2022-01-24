@@ -37,8 +37,8 @@ const hookStub = [{
     "steps": []
 }]
 
-describe("Tests to validate mapping hooks", () => {
-    it("Should successfully map a hook", () => {
+describe("Tests to validate mapping hooks", async function() {
+    it("Should successfully map a hook", async function() {
         const hookData = MapHooks(hookStub)
 
         expect(hookData.length).to.eql(2)

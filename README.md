@@ -91,26 +91,26 @@ Import the step function to be used during tests and page object actions
 import { step } from "wdio-json-steps-reporter"
 ...
 
-before(function () {
-    step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
-        browser.url("https://webdriver.io")
-        page.waitUntilLoaded()
+before(async function() {
+    await step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", async function() {
+        await browser.url("https://webdriver.io")
+        await page.waitUntilLoaded()
     })
 })
 
-it("should have the correct title", function() {
+it("should have the correct title", async function() {
     page.verifyPageTitle() //defaults = {createStep: true, takeScreenshot: false}
     page.verifyPageTitle({createStep: false) // no log will be generated in the report, the tasks will still be executed
     page.verifyPageTitle({takeScreenshot: true, highlightElement: $(".hero__subtitle")}) //fullpage screenshot, highlighting the title element
     page.verifyPageTitle({customDescription: "Override the description", customExpectation: "Override the expectation"}))
 })
 
-verifyPageTitle(stepOptions?: StepOptions): void {
-    step(stepOptions, 
+async verifyPageTitle(stepOptions?: StepOptions): Promise<void> {
+    return await step(stepOptions, 
         "Verify the page title is correct",
         "The page title should be correct",
-        "The page title was correct", () => {
-        const title = $(".hero__subtitle")
+        "The page title was correct", async function() {
+        const title = await $(".hero__subtitle")
         expect(title).to.equal("Next-gen browser and mobile automation test framework for Node.js")
     })
 }

@@ -27,8 +27,8 @@ class Reporter extends WDIOReporter {
         this.testDir = path.normalize(options.testDir || "test/")
         this.fileName = options.logFile
 
-        process.on("step:log", (stepOptions, step) => {
-            this.onStepEvent(stepOptions, step)
+        process.on("step:log", async (stepOptions, step) => {
+            await this.onStepEvent(stepOptions, step)
         })
     }
 
@@ -41,7 +41,8 @@ class Reporter extends WDIOReporter {
             const testResultPath = specName.substring(specName.indexOf(this.testDir) + this.testDir.length, specName.lastIndexOf("."))
             this.resultPath = path.join(this.outputDir, browserName, testResultPath)
             this.screenshotPath = path.join(this.resultPath, "screenshots")
-            fsExtra.ensureDirSync(this.screenshotPath)  
+            fsExtra.ensureDirSync(this.screenshotPath)
+            fsExtra.ensureDirSync("screenshots/")
         }
     }
 
@@ -101,17 +102,17 @@ class Reporter extends WDIOReporter {
         this.delegatedStepsArray = this.delegatedTest.steps
     }
 
-    onStepEvent(stepOptions, step) {
+    async onStepEvent(stepOptions, step) {
+        console.log("emitted step processing")
         if (stepOptions.createLog || stepOptions.takeScreenshot) {
             if (stepOptions.takeScreenshot) {
-                step.screenshotPath = path.join(this.screenshotPath, Date.now() + ".png")
-                browser.saveScreenshot(step.screenshotPath, stepOptions.highlightElement)
+                const newScreenshotName = path.join(this.screenshotPath, step.screenshotPath.split("_").pop())
+                fsExtra.moveSync(step.screenshotPath, newScreenshotName, {overwrite: true})
+                step.screenshotPath = newScreenshotName
             }
             this.delegatedStepsArray.push(step)
         }
-        if (step.error) {
-            throw step.error
-        }
+        console.log("step processing completed?")
     }
 
     onSuiteEnd(suite) {

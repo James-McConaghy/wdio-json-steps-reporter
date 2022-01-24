@@ -16,6 +16,8 @@ async function saveScreenshot(originalFunction, filepath, element) {
             await element.highlight()
         }
 
+        console.log(fullPageDimensions)
+
         const screenshot = await browser.sendCommandAndGetResult("Page.captureScreenshot", {
             "format": "png",
             "fromSurface": true,

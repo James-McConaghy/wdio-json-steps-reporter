@@ -20,7 +20,7 @@ async function step(stepOptions = {createLog: true, takeScreenshot: false}, desc
         state: "pending"
     }
     try {
-        tasks()
+        await tasks()
         step.actual = stepOptions.customActual || actual
         step.state = "passed"
     }
@@ -30,7 +30,14 @@ async function step(stepOptions = {createLog: true, takeScreenshot: false}, desc
         stepOptions.takeScreenshot = true
     }
     finally {
+        if (stepOptions.takeScreenshot) {
+            step.screenshotPath = `screenshots/${browser.sessionId}_${Date.now() + ".png"}`
+            await browser.saveScreenshot(step.screenshotPath, stepOptions.highlightElement)
+        }
         process.emit("step:log", stepOptions, step)
+        if (step.error) {
+            throw step.error
+        }
     }
     return step
 }
@@ -61,18 +68,18 @@ async function steps(stepOptions = {createLog: true, takeScreenshot: false}, act
         state: "pending"
     }
     try {
-        actions.forEach(action => {
-            let completedAction = action({createLog: false, takeScreenshot: false})
+        for (const action of actions) {
+            let completedAction = await action({createLog: false, takeScreenshot: false})
             step.description.push(completedAction.description)
             step.expectation.push(completedAction.expectation)
             step.actual.push(completedAction.actual)
-        });
-        assertions.forEach(assertion => {
-            let completedAssertion = assertion({createLog: false, takeScreenshot: false})
+        }
+        for (const assertion of assertions) {
+            let completedAssertion = await assertion({createLog: false, takeScreenshot: false})
             step.description.push(completedAssertion.description)
             step.expectation.push(completedAssertion.expectation)
             step.actual.push(completedAssertion.actual)
-        });
+        }
         step.state = "passed"
     }
     catch (error) {
@@ -84,7 +91,14 @@ async function steps(stepOptions = {createLog: true, takeScreenshot: false}, act
         step.description = stepOptions.customDescription || step.description.join("\n")
         step.expectation = stepOptions.customExpectation || step.expectation.join("\n")
         step.actual = stepOptions.customActual || step.actual.join("\n")
+        if (stepOptions.takeScreenshot) {
+            step.screenshotPath = `screenshots/${browser.sessionId}_${Date.now() + ".png"}`
+            await browser.saveScreenshot(step.screenshotPath, stepOptions.highlightElement)
+        }
         process.emit("step:log", stepOptions, step)
+        if (step.error) {
+            throw step.error
+        }
     }
 }
 
