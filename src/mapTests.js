@@ -1,4 +1,4 @@
-module.exports = function mapTests(suiteTests) {
+function mapTests(suiteTests) {
     let tests = []
     for (const testName of Object.keys(suiteTests)) {
         const test = suiteTests[testName]
@@ -27,3 +27,5 @@ module.exports = function mapTests(suiteTests) {
     }
     return tests
 }
+
+export default { mapTests }

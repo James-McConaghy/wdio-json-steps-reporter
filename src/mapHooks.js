@@ -1,4 +1,4 @@
-module.exports = function mapHooks(suiteHooks) {
+function mapHooks(suiteHooks) {
     let hooks = []
     for (const hookName of Object.keys(suiteHooks)) {
         const hook = suiteHooks[hookName]
@@ -30,3 +30,5 @@ module.exports = function mapHooks(suiteHooks) {
     }
     return hooks
 }
+
+export default { mapHooks }

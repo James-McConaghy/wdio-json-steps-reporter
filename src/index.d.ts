@@ -1,8 +1,8 @@
-import { ChainablePromiseElement } from "webdriverio";
-
 declare module "wdio-json-steps-reporter" {
 
-    type Step = {
+    import { ChainablePromiseElement } from "webdriverio";
+
+    export interface Step {
         description: string;
         expectation: string;
         actual: string;
@@ -11,7 +11,7 @@ declare module "wdio-json-steps-reporter" {
         screenshotPath?: string;
     }
 
-    interface StepOptions {
+    export interface StepOptions {
         createLog: boolean;
         takeScreenshot: boolean;
         customDescription?: string;
@@ -34,50 +34,49 @@ declare module "wdio-json-steps-reporter" {
         * @param {Function} tasks to be executed by the webdriver
         * @return {Promise<Step>} The Step log object that will be used in the resulting json results and combined Steps wrapper.
     */
-    function step(stepOptions: StepOptions, description: string, expectation: string, actual: string, tasks: Function): Promise<Step>
-
-}
+     export function step(stepOptions: StepOptions, description: string, expectation: string, actual: string, tasks: Function): Promise<Step>
 
 
-declare global {
+     global {
 
-    namespace WebdriverIO {
+        namespace WebdriverIO {
 
-        // adding command to `browser`
-        interface Browser {
+            interface Browser {
 
-            saveScreenshot(filepath: string)
+                saveScreenshot(filepath: string)
 
-            /**
-             * This method overwrites the default wdio saveScreenshot, allowing an Element Selector to be passed in 
-             * which will get highlighted for the screenshot.
-             * 
-                * @param {string} filepath The file path to save the screenshot.
-                * @param {ChainablePromiseElement<Promise<WebdriverIO.Element>>} element The element to be highlighted.
-                * 
-            */
-            saveScreenshot(filepath: string, element: ChainablePromiseElement<Promise<WebdriverIO.Element>>)
+                /**
+                 * This method overwrites the default wdio saveScreenshot, allowing an Element Selector to be passed in 
+                 * which will get highlighted for the screenshot.
+                 * 
+                    * @param {string} filepath The file path to save the screenshot.
+                    * @param {ChainablePromiseElement<Promise<WebdriverIO.Element>>} element The element to be highlighted.
+                    * 
+                */
+                saveScreenshot(filepath: string, element: ChainablePromiseElement<Promise<WebdriverIO.Element>>)
 
-            /**
-             * This method will remove all highlight styles that have been applied to elements on the current DOM.
-             * 
-            */
-            removeHighlights(): Promise<void>
-        }
+                /**
+                 * This method will remove all highlight styles that have been applied to elements on the current DOM.
+                 * 
+                */
+                removeHighlights(): Promise<void>
+            }
 
-        // adding command to `element`
-        interface Element {
-            /**
-             * Highlights the element with a red border style.
-             * 
-            */
-            highlight(): Promise<void>
+            // adding command to `element`
+            interface Element {
+                /**
+                 * Highlights the element with a red border style.
+                 * 
+                */
+                highlight(): Promise<void>
 
-            /**
-             * Removes the highlight style on the current element.
-             * 
-            */
-            removeHighlight(): Promise<void>
+                /**
+                 * Removes the highlight style on the current element.
+                 * 
+                */
+                removeHighlight(): Promise<void>
+            }
+
         }
 
     }

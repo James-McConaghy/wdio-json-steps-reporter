@@ -1,6 +1,6 @@
-const version = require("./package.json").version
-const StepsReporter = require("./src/index")
-const customCommands = require("./src/customCommands")
+import StepReporter, { generateWebReport } from "./src/index"
+
+//const customCommands = require("./src/customCommands")
 
 exports.config = {
     //
@@ -129,7 +129,7 @@ exports.config = {
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter.html
     reporters: [
-        [StepsReporter.reporter, {
+        [StepReporter, {
             outputDir: "./results/",
             testDir: "./test/",
             build: 3
@@ -268,7 +268,7 @@ exports.config = {
      * @param {<Object>} results object containing test results
      */
     onComplete: async function(exitCode, config, capabilities, results) {
-        await StepsReporter.generateWebReport({
+        await generateWebReport({
             reportDir: "./report/",
             resultsDir: "./results/",
             testDir: "./test/",
