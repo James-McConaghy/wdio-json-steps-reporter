@@ -25,6 +25,7 @@ async function step(stepOptions = {createLog: true, takeScreenshot: false}, desc
         step.state = "passed"
     }
     catch (error) {
+        step.actual = error.message
         step.error = error
         step.state = "failed"
         stepOptions.takeScreenshot = true
