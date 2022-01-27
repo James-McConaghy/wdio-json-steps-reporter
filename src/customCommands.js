@@ -1,4 +1,4 @@
-import fs from "fs"
+const fs = require("fs")
 
 async function saveScreenshot(originalFunction, filepath, element) {
     try {
@@ -63,4 +63,4 @@ async function removeHighlights() {
     })
 }
 
-export { saveScreenshot, highlight, removeHighlight, removeHighlights }
+module.exports = { saveScreenshot, highlight, removeHighlight, removeHighlights }

@@ -1,5 +1,5 @@
-import path from "path"
-import fs from "fs"
+const path = require("path")
+const fs = require("fs-extra")
 
 function generateWebReport(options) {
     
@@ -91,4 +91,4 @@ function writeJSONFile(directory, filename, json) {
     fs.writeFileSync(filePath, JSON.stringify(json))
 }
 
-export default { generateWebReport }
+module.exports = { generateWebReport }

@@ -42,4 +42,4 @@ async function step(stepOptions = {createLog: true, takeScreenshot: false}, desc
     return step
 }
 
-export default { step }
+module.exports = { step }

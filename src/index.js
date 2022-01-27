@@ -1,14 +1,12 @@
-import WDIOReporter from "@wdio/reporter"
-import * as fsExtra from "fs-extra"
-import path from "path"
-
-import { mapHooks } from "./mapHooks"
-import { mapTests } from "./mapTests"
-import { initResultSet } from "./initResultSet"
-
-import { saveScreenshot, highlight, removeHighlight, removeHighlights } from "./customCommands"
-import { generateWebReport } from "./generateWebReport"
-import { step } from "./step"
+const WDIOReporter = require("@wdio/reporter").default
+const fsExtra = require("fs-extra")
+const path = require("path")
+const mapHooks = require("./mapHooks")
+const mapTests = require("./mapTests")
+const initResultSet = require("./initResultSet")
+const {saveScreenshot, highlight, removeHighlight, removeHighlights} = require("./customCommands")
+const {generateWebReport} = require("./generateWebReport")
+const {step} = require("./step")
 
 class Reporter extends WDIOReporter {
 
@@ -199,6 +197,12 @@ class Reporter extends WDIOReporter {
     
 }
 
-
-export default Reporter
-export { generateWebReport, step, saveScreenshot, highlight, removeHighlight, removeHighlights }
+module.exports = { 
+    reporter: Reporter,
+    step: step,
+    generateWebReport: generateWebReport,
+    saveScreenshot: saveScreenshot,
+    highlight: highlight,
+    removeHighlight: removeHighlight,
+    removeHighlights: removeHighlights
+}

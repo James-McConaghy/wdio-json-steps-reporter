@@ -1,4 +1,4 @@
-function initResultSet(runner) {
+module.exports = function initResultSet(runner) {
     let resultSet = {}
 
     resultSet.start = runner.start
@@ -16,5 +16,3 @@ function initResultSet(runner) {
 
     return resultSet
 }
-
-export default  { initResultSet }
