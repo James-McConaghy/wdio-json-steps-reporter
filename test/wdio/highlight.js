@@ -10,13 +10,13 @@ describe("Single Steps : Getting Started", async function() {
     })
 
     
-    it.skip("AC 1 Hightlight an element in the screenshot", async function() {
+    it("AC 1 Highlight an element in the screenshot", async function() {
         await step({createLog: true, takeScreenshot: true, highlightElement: $("h1.hero__title")}, "Verify the step takes a screenshot", "The step should take a screenshot", "The test failed", async function() {
             expect(await $("h1.hero__title").isDisplayed()).to.equal(true)
         })
     })
 
-    it.skip("AC 2 StepOptions highlight should automatically be removed", async function() {
+    it("AC 2 StepOptions highlight should automatically be removed", async function() {
         await step({createLog: true, takeScreenshot: true}, "Verify the step takes a screenshot", "The step should take a screenshot", "The test failed", async function() {
             const elementId = await $("h1.hero__title").elementId
             expect(await $(`.customHighlight_${elementId}`).isDisplayed()).to.equal(false)
