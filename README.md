@@ -99,13 +99,13 @@ before(async function() {
 })
 
 it("should have the correct title", async function() {
-    page.verifyPageTitle() //defaults = {createStep: true, takeScreenshot: false}
-    page.verifyPageTitle({createStep: false) // no log will be generated in the report, the tasks will still be executed
-    page.verifyPageTitle({takeScreenshot: true, highlightElement: $(".hero__subtitle")}) //fullpage screenshot, highlighting the title element
-    page.verifyPageTitle({customDescription: "Override the description", customExpectation: "Override the expectation"}))
+    await page.verifyPageTitle() //defaults = {createStep: true, takeScreenshot: false}
+    await page.verifyPageTitle({createStep: false) // no log will be generated in the report, the tasks will still be executed
+    await page.verifyPageTitle({takeScreenshot: true, highlightElement: $(".hero__subtitle")}) //fullpage screenshot, highlighting the title element
+    await page.verifyPageTitle({customDescription: "Override the description", customExpectation: "Override the expectation"}))
 })
 
-async verifyPageTitle(stepOptions?: StepOptions): Promise<void> {
+async verifyPageTitle(stepOptions?: StepOptions): Promise<Step> {
     return await step(stepOptions, 
         "Verify the page title is correct",
         "The page title should be correct",
@@ -123,7 +123,7 @@ Additionally, an element can be passed in to be highlighted in the screenshot.
     type StepOptions = {
         createLog: boolean;
         takeScreenshot: boolean;
-        highlightElement?: WebdriverIO.Element;
+        highlightElement?: ChainablePromiseElement<Promise<WebdriverIO.Element>>;
         customDescription?: string;
         customExpectation?: string;
         customActual?: string;

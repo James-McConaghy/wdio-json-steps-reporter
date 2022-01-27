@@ -16,39 +16,34 @@ describe("Single Steps : Getting Started", async function() {
         })
     })
 
-    it("AC 1 should have the right title", async function() {
-        //using a reusable page object action/assertion
-        await verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
+    it("AC 1 should execute steps within page object methods", async function() {
+        await verifyPageTitle({createLog: true, takeScreenshot: true})
     })
 
-    it.skip("AC 2 test should be skipped", async function() {
+    it("AC 2 should execute steps within page object methods but NO step should be logged", async function() {
+        await step({createLog: false}, "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", async function() {
+            await browser.pause(1000)
+        })
+    })
+
+    it("AC 3 should execute browser scripts", async function() {
+        await scrollPage({createLog: true, takeScreenshot: "viewport"}, 0, 2000)
+    })
+
+    it.skip("AC 4 test should be skipped", async function() {
         await step({createLog: true, takeScreenshot: true}, "This test and child steps should be skipped", "This test and child steps should be skipped", "This test and child steps should be skipped", async function() {
             await browser.deleteSession()
         })
     })
 
-    it("AC 3 test and step executed but NO step should be logged", async function() {
-        await step({createLog: false}, "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", async function() {
-            await browser.pause(3000)
-        })
-    })
-
-    it("AC 4 group step methods into single steps together", async function() {
-        await steps({createLog: true, takeScreenshot: true},
-            [
-                (stepOptions) => scrollPage(0, 2000, stepOptions),
-                async (stepOptions) => await verifyPageTitle(stepOptions)
-            ], 
-            [
-                async (stepOptions) => await verifyPageTitle(stepOptions)
-            ]
-        )
-    })
-
-    describe.skip("Depth 1: skipped", async function() {
+    describe.skip("Suite: skip all nested its", async function() {
       
         it("AC 5 should be skipped", async function() {
-            await verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
+            await verifyPageTitle({createLog: true, takeScreenshot: true})
+        })
+
+        it.skip("AC 6 should be skipped", async function() {
+            await verifyPageTitle({createLog: true, takeScreenshot: true})
         })
     
     }) 
@@ -61,17 +56,18 @@ describe("Single Steps : Getting Started", async function() {
 
     after(async function() {
         await step({createLog: true, takeScreenshot: false}, "Close the browser", "Close the browser", "Close the browser", async function() {
-            //browser.closeWindow()
+            //await browser.closeWindow()
         })
     })
 
 })
 
 //reusable page action
-async function scrollPage(x, y, stepOptions) {
+async function scrollPage(stepOptions, x, y) {
     return await step(stepOptions, `Scroll the page by ${x}, ${y}`, `The page should have scrolled by ${x}, ${y}`, `The page scrolled by ${x}, ${y}`, async function() {
-        browser.execute((x, y) => scrollBy(x, y), x, y)
-        console.log("scrollling")
+        await browser.pause(2000)
+        await browser.execute((x, y) => scrollBy(x, y), x, y)
+        await browser.pause(2000)
     })
 }
 

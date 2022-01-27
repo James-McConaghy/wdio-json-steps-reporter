@@ -1,7 +1,7 @@
 const fs = require("fs-extra")
 const path = require("path")
 
-module.exports = function generateWebReport(options) {
+function generateWebReport(options) {
     
     const resultsDir = options.resultsDir ? path.normalize(options.resultsDir) : path.normalize("results/")
     const reportDir = options.reportDir ? path.normalize(options.reportDir) : path.normalize("report/")
@@ -90,3 +90,5 @@ function writeJSONFile(directory, filename, json) {
     const filePath = path.join(directory, filename)
     fs.writeFileSync(filePath, JSON.stringify(json))
 }
+
+module.exports = {generateWebReport}

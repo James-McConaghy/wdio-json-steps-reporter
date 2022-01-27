@@ -16,8 +16,6 @@ async function saveScreenshot(originalFunction, filepath, element) {
             await element.highlight()
         }
 
-        console.log(fullPageDimensions)
-
         const screenshot = await browser.sendCommandAndGetResult("Page.captureScreenshot", {
             "format": "png",
             "fromSurface": true,
@@ -37,10 +35,11 @@ async function saveScreenshot(originalFunction, filepath, element) {
 }
 
 async function highlight() {
-    await browser.execute((element) => {
+    const elementId = await this.elementId
+    await browser.execute((element, elementId) => {
         let bounds = element.getBoundingClientRect()
         let highlight = document.createElement("div")
-        highlight.id = `customHighlight_${this.elementId}`
+        highlight.id = `customHighlight_${elementId}`
         highlight.classList.add("customHighlight")
         highlight.style.width = bounds.width + "px"
         highlight.style.height = bounds.height + "px"
@@ -49,13 +48,14 @@ async function highlight() {
         highlight.style.border = "2px solid red"
         highlight.style.position = "absolute"
         document.body.append(highlight)
-    }, this)
+    }, this, elementId)
 }
 
 async function removeHighlight() {
-    await browser.execute(() => {
-        document.getElementById(`customHighlight_${this.elementId}`).remove()
-    }, this)
+    const elementId = await this.elementId
+    await browser.execute((elementId) => {
+        document.getElementById(`customHighlight_${elementId}`).remove()
+    }, elementId)
 }
 
 async function removeHighlights() {

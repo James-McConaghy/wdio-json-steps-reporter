@@ -4,13 +4,13 @@ const path = require("path")
 const mapHooks = require("./mapHooks")
 const mapTests = require("./mapTests")
 const initResultSet = require("./initResultSet")
-const generateWebReport = require("./generateWebReport")
-const {step, steps} = require("./step")
+const {generateWebReport} = require("./generateWebReport")
+const {step} = require("./step")
 const {saveScreenshot, highlight, removeHighlight, removeHighlights} = require("./customCommands")
 
 class Reporter extends WDIOReporter {
 
-    constructor (options) {
+    constructor(options) {
         options = Object.assign(options)
         super(options)
 
@@ -103,7 +103,6 @@ class Reporter extends WDIOReporter {
     }
 
     async onStepEvent(stepOptions, step) {
-        console.log("emitted step processing")
         if (stepOptions.createLog || stepOptions.takeScreenshot) {
             if (stepOptions.takeScreenshot) {
                 const newScreenshotName = path.join(this.screenshotPath, step.screenshotPath.split("_").pop())
@@ -112,7 +111,6 @@ class Reporter extends WDIOReporter {
             }
             this.delegatedStepsArray.push(step)
         }
-        console.log("step processing completed?")
     }
 
     onSuiteEnd(suite) {
@@ -201,11 +199,10 @@ class Reporter extends WDIOReporter {
 
 module.exports = { 
     reporter: Reporter,
-    step,
-    steps,
-    generateWebReport,
-    saveScreenshot,
-    highlight,
-    removeHighlight,
-    removeHighlights
+    step: step,
+    generateWebReport: generateWebReport,
+    saveScreenshot: saveScreenshot,
+    highlight: highlight,
+    removeHighlight: removeHighlight,
+    removeHighlights: removeHighlights
 }
