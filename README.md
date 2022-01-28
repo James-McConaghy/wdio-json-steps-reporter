@@ -25,7 +25,7 @@ NPM
 
 Require the reporter in the wdio configuration file. 
 ```javascript
-    const StepsReporter = require("./src/index")
+    const StepsReporter = require("wdio-json-steps-reporter")
 ```
 
 ##### Use the reporter
