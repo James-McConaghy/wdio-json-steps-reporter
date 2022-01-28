@@ -2,8 +2,8 @@ const expect = require("chai").expect
 const runnerMock = require("../__mocks__/runner.json")
 const initResultSet = require("../../src/initResultSet")
 
-describe("Tests to validate initializing the result set", () => {
-    it("Should successfully map runner attributes to the result set object", () => {
+describe("Tests to validate initializing the result set", async function() {
+    it("Should successfully map runner attributes to the result set object", async function() {
         const resultSet = initResultSet(runnerMock)
         expect(resultSet.start).to.eql(runnerMock.start)
         expect(resultSet.end).to.eql(runnerMock.end)

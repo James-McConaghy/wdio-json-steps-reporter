@@ -1,85 +1,83 @@
 const expect = require("chai").expect
 const {step, steps} = require("../../src/step")
 
-describe("Single Steps : Getting Started", () => {
+describe("Single Steps : Getting Started", async function() {
 
-    before(function () {
-        step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
-            browser.navigateTo("https://webdriver.io")
+    before(async function() {
+        await step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", async function() {
+            await browser.navigateTo("https://webdriver.io")
         })
     })
 
-    beforeEach(function () {
-        step({createLog: true, takeScreenshot: "fullpage"}, "Refresh the page", "The page should refresh", "The page refreshed", () => {
-            browser.refresh()
-            browser.pause(1000)
+    beforeEach(async function() {
+        await step({createLog: true, takeScreenshot: "fullpage"}, "Refresh the page", "The page should refresh", "The page refreshed", async function() {
+            await browser.refresh()
+            await browser.pause(1000)
         })
     })
 
-    it("AC 1 should have the right title", () => {
-        //using a reusable page object action/assertion
-        verifyPageTitle({createLog: true, takeScreenshot: "viewport", highlightElement: $("h1.hero__title")})
+    it("AC 1 should execute steps within page object methods", async function() {
+        await verifyPageTitle({createLog: true, takeScreenshot: true})
     })
 
-    it.skip("AC 2 test should be skipped", () => {
-        step({createLog: true, takeScreenshot: true}, "This test and child steps should be skipped", "This test and child steps should be skipped", "This test and child steps should be skipped", () => {
-            browser.deleteSession()
+    it("AC 2 should execute steps within page object methods but NO step should be logged", async function() {
+        await step({createLog: false}, "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", async function() {
+            await browser.pause(1000)
         })
     })
 
-    it("AC 3 test and step executed but NO step should be logged", () => {
-        step({createLog: false}, "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", "Test and steps will execute but no logs will be generated", () => {
-            browser.pause(3000)
+    it("AC 3 should execute browser scripts", async function() {
+        await scrollPage({createLog: true, takeScreenshot: "viewport"}, 0, 2000)
+    })
+
+    it.skip("AC 4 test should be skipped", async function() {
+        await step({createLog: true, takeScreenshot: true}, "This test and child steps should be skipped", "This test and child steps should be skipped", "This test and child steps should be skipped", async function() {
+            await browser.deleteSession()
         })
     })
 
-    it("AC 4 group step methods into single steps together", () => {
-        steps({createLog: true, takeScreenshot: true},
-            [
-                (stepOptions) => scrollPage(0, 2000, stepOptions)
-            ], 
-            [
-                (stepOptions) => verifyPageTitle(stepOptions)
-            ]
-        )
-    })
-
-    describe.skip("Depth 1: skipped", () => {
+    describe.skip("Suite: skip all nested its", async function() {
       
-        it("AC 5 should be skipped", () => {
-            verifyPageTitle({createLog: true, takeScreenshot: "viewport"})
+        it("AC 5 should be skipped", async function() {
+            await verifyPageTitle({createLog: true, takeScreenshot: true})
+        })
+
+        it.skip("AC 6 should be skipped", async function() {
+            await verifyPageTitle({createLog: true, takeScreenshot: true})
         })
     
     }) 
 
-    afterEach(function () {
-        step({createLog: true, takeScreenshot: false}, "Delete all cookies", "The cookies should be deleted", "The cookies were deleted", () => {
-            browser.deleteAllCookies()    
+    afterEach(async function() {
+        await step({createLog: true, takeScreenshot: false}, "Delete all cookies", "The cookies should be deleted", "The cookies were deleted", async function() {
+            await browser.deleteAllCookies()    
         })
     })
 
-    after(function () {
-        step({createLog: true, takeScreenshot: false}, "Close the browser", "Close the browser", "Close the browser", () => {
-            //browser.closeWindow()
+    after(async function() {
+        await step({createLog: true, takeScreenshot: false}, "Close the browser", "Close the browser", "Close the browser", async function() {
+            //await browser.closeWindow()
         })
     })
 
 })
 
 //reusable page action
-function scrollPage(x, y, stepOptions) {
-    return step(stepOptions, `Scroll the page by ${x}, ${y}`, `The page should have scrolled by ${x}, ${y}`, `The page scrolled by ${x}, ${y}`, () => {
-        browser.execute((x, y) => scrollBy(x, y), x, y)
+async function scrollPage(stepOptions, x, y) {
+    return await step(stepOptions, `Scroll the page by ${x}, ${y}`, `The page should have scrolled by ${x}, ${y}`, `The page scrolled by ${x}, ${y}`, async function() {
+        await browser.pause(2000)
+        await browser.execute((x, y) => scrollBy(x, y), x, y)
+        await browser.pause(2000)
     })
 }
 
 //reusable page assertions
-function verifyPageTitle(stepOptions) {
-    return step(stepOptions, 
+async function verifyPageTitle(stepOptions) {
+    return await step(stepOptions, 
         "Verify the page title is correct", 
         "The page title should be correct", 
-        "The title was correct", () => {
-            const title = browser.getTitle()
+        "The title was correct", async function() {
+            const title = await browser.getTitle()
             expect(title).to.include("WebdriverIO")
         })
 }
