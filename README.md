@@ -25,7 +25,7 @@ NPM
 
 Require the reporter in the wdio configuration file. 
 ```javascript
-    const StepsReporter = require("wdio-json-steps-reporter")
+    const StepsReporter = require("./src/index")
 ```
 
 ##### Use the reporter
@@ -46,11 +46,11 @@ Configure wdio to use the required StepsReporter as a reporter.
 #### Overwrite/Add custom commands to browser and element
 Overwrite and add the commands from the required StepsReporter.
 ```javascript
-    before: function (capabilities, specs) {
-        browser.overwriteCommand("saveScreenshot", StepsReporter.saveScreenshot)
-        browser.addCommand("highlight", StepsReporter.highlight, true)
-        browser.addCommand("removeHighlight", StepsReporter.removeHighlight, true)
-        browser.addCommand("removeHighlights", StepsReporter.removeHighlights)
+    before: async function (capabilities, specs) {
+        await browser.overwriteCommand("saveScreenshot", StepsReporter.saveScreenshot)
+        await browser.addCommand("highlight", StepsReporter.highlight, true)
+        await browser.addCommand("removeHighlight", StepsReporter.removeHighlight, true)
+        await browser.addCommand("removeHighlights", StepsReporter.removeHighlights)
     }
 ```
 
@@ -62,7 +62,7 @@ when utilizing the report dashboard to get the full benefits of it's features
 * @param {string} testDir : The root directory where tests are stored 
 * @param {string | number} build : The version, jenkins build or name that the html report will be generated for
 ```javascript
-    onComplete: function(exitCode, config, capabilities, results) {
+    onComplete: async function(exitCode, config, capabilities, results) {
         StepsReporter.generateWebReport({
             reportDir: "./report/",
             resultsDir: "./results/",
