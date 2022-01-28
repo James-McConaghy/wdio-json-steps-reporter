@@ -1,45 +1,46 @@
-const fs = require("fs-extra")
 const path = require("path")
+const fs = require("fs-extra")
 
-module.exports = function generateWebReport(options) {
-    const build = options.build ? options.build.toString() : "local"
+function generateWebReport(options) {
+    
     const resultsDir = options.resultsDir ? path.normalize(options.resultsDir) : path.normalize("results/")
     const reportDir = options.reportDir ? path.normalize(options.reportDir) : path.normalize("report/")
+    
     const testDir = path.normalize(options.testDir || "test/")
+    const build = options.build ? options.build.toString() : "local"
 
-    buildReport(reportDir, resultsDir, build, testDir)
+    buildReport(resultsDir, reportDir, testDir, build)
 }
 
-function buildReport(reportDir, resultsDir, build, testDir) {
-    const reportPath = path.join(reportDir, "/public/", resultsDir)
-    const buildPath = path.join(reportPath, build)
-    const srcDirJS = path.join(__dirname, "/site/js/")
-    const srcDirCSS = path.join(__dirname, "/site/css/")
-    const srcDirHTML = path.join(__dirname, "/site/html/")
-    const srcServer = path.join(__dirname, "/site/server/")
+function buildReport(resultsDir, reportDir, testDir, build) {
+    const dirReport = reportDir
+    const dirReportPublic = path.join(reportDir, "/public/")
+    const dirReportPublicResults = path.join(dirReportPublic, resultsDir)
+    const dirReportPublicResultsBuild = path.join(dirReportPublicResults, build)
 
-    // Delete existing report under build and ensure folder exists after
-    fs.removeSync(buildPath, { recursive: true, force: true })
-    fs.ensureDirSync(buildPath) 
+    const dirResults = resultsDir
+    const dirResultsBuild = path.join(dirResults, build)
 
-    // Copy results into report build directory
-    fs.copySync(resultsDir, reportPath)
+    const srcReactSite = path.join(__dirname, "/react-site/")
+    const srcReactServer = path.join(__dirname, "/react-server/")
 
-    // Copy / aggregate and move HTML, CSS, JS into report directory
-    fs.copyFileSync(path.join(srcDirHTML, "index.html"), path.join(reportDir, "/public/", "index.html"))
-    fs.copyFileSync(path.join(srcServer, "server.js"), path.join(reportDir, "server.js"))
-    aggregateFilesIntoFolder(srcDirJS, path.join(reportDir, "/public/", "script.js"))
-    aggregateFilesIntoFolder(srcDirCSS, path.join(reportDir, "/public/", "stylesheet.css"))
+    // Delete existing report build, ensure folder exists and copy results build in
+    fs.removeSync(dirReportPublicResultsBuild, { recursive: true, force: true })
+    fs.ensureDirSync(dirReportPublicResultsBuild)
+    fs.copySync(dirResultsBuild, dirReportPublicResultsBuild)
+    
+    // Copy react site and server into report
+    fs.copySync(srcReactSite, dirReport)
+    fs.copySync(srcReactServer, dirReport)
 
     // Write JSON into report / build
-    const listOfResultsFiles = getListOfResultsFilesRecursivly(buildPath)
+    const listOfResultsFiles = getListOfCurrentBuildsResultsJSONFilesRecursivly(dirReportPublicResultsBuild)
     const rawJSONResults = extractJSONFromResultsFiles(listOfResultsFiles)
-    const mergedJSONResults = mergeJSONResults(rawJSONResults)
-    writeJSONFile(buildPath, "merged-results.json", mergedJSONResults)
-    writeJSONFile(reportDir, "/public/buildInfo.json", generateBuildInfo(buildPath, testDir))
+    const mergedJSONResults = compileJSONResults(rawJSONResults, testDir)
+    writeJSONFile(dirReportPublicResultsBuild, "merged-results.json", mergedJSONResults)
 }
 
-function getListOfResultsFilesRecursivly(resultsDir, foundItems, listOfFiles) {
+function getListOfCurrentBuildsResultsJSONFilesRecursivly(resultsDir, foundItems, listOfFiles) {
 
     listOfFiles = listOfFiles || []
     foundItems = foundItems || fs.readdirSync(resultsDir)
@@ -47,7 +48,7 @@ function getListOfResultsFilesRecursivly(resultsDir, foundItems, listOfFiles) {
     foundItems.forEach(item => {
         let itemPath = path.join(resultsDir, item)
         if (fs.statSync(itemPath).isDirectory() && item !== "screenshots") {
-            listOfFiles = getListOfResultsFilesRecursivly(itemPath, fs.readdirSync(itemPath), listOfFiles)
+            listOfFiles = getListOfCurrentBuildsResultsJSONFilesRecursivly(itemPath, fs.readdirSync(itemPath), listOfFiles)
         } else if (fs.statSync(itemPath).isFile() && item === "results.json") {
             listOfFiles.push(itemPath)
         }
@@ -57,13 +58,12 @@ function getListOfResultsFilesRecursivly(resultsDir, foundItems, listOfFiles) {
 }
 
 function extractJSONFromResultsFiles(listOfFiles) {
-    const extractedJSON = listOfFiles.map(file => {
+    return listOfFiles.map(file => {
         return JSON.parse(fs.readFileSync(file))
     })
-    return extractedJSON
 }
 
-function mergeJSONResults(rawData) {
+function compileJSONResults(rawData, testDir) {
 
     const aggregatedReport = {
         passed: 0,
@@ -81,36 +81,14 @@ function mergeJSONResults(rawData) {
     })
 
     aggregatedReport.results = rawData
+    aggregatedReport.testDir = testDir
 
     return aggregatedReport
 }
 
 function writeJSONFile(directory, filename, json) {
     const filePath = path.join(directory, filename)
-    console.log(filePath)
     fs.writeFileSync(filePath, JSON.stringify(json))
 }
 
-function aggregateFilesIntoFolder(srcDir, buildFile) {
-    fs.existsSync(buildFile) ? fs.unlinkSync(buildFile) : null
-    let files = fs.readdirSync(srcDir)
-    files.forEach(file => {
-        let content = fs.readFileSync(srcDir + file)
-        fs.appendFileSync(buildFile, content + "\n\n")
-    })
-}
-
-function generateBuildInfo(resultsDir, testDir) {
-    
-    if (resultsDir.endsWith(path.sep)) { resultsDir = resultsDir.slice(0, -1)}
-
-    let build = resultsDir.split(path.sep).pop()
-    if (build.match(/^[0-9]+$/) != null) {
-        build = parseInt(build)
-    }
-
-    return json = {
-        "build": build,
-        "testDir": path.normalize(path.sep + testDir + path.sep)
-    }
-}
+module.exports = { generateWebReport }

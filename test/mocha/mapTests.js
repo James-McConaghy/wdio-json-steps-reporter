@@ -4,8 +4,8 @@ const passingTest = require("../__mocks__/passing.json")
 const skippedTest = require("../__mocks__/skipped.json")
 const failingTest = require("../__mocks__/failing.json")
 
-describe("Tests to validate mapping Tests", () => {
-    it("Should successfully map a passing test", () => {
+describe("Tests to validate mapping Tests", async function() {
+    it("Should successfully map a passing test", async function() {
         const testData = MapTest([passingTest])
 
         expect(testData.length).to.eql(1)
@@ -19,7 +19,7 @@ describe("Tests to validate mapping Tests", () => {
         })
     })
 
-    it("Should successfully map a skipped test", () => {
+    it("Should successfully map a skipped test", async function() {
         const testData = MapTest([skippedTest])
 
         expect(testData.length).to.equal(1)
@@ -33,7 +33,7 @@ describe("Tests to validate mapping Tests", () => {
         })
     })
 
-    it("Should successfully map a failing test", () => {
+    it("Should successfully map a failing test", async function() {
         const testData = MapTest([failingTest])
 
         expect(testData.length).to.equal(1)
@@ -50,7 +50,7 @@ describe("Tests to validate mapping Tests", () => {
         })
     })
 
-    it("Should successfully map multiple tests", () => {
+    it("Should successfully map multiple tests", async function() {
         const testData = MapTest([passingTest, skippedTest, failingTest])
 
         expect(testData.length).to.eql(3)

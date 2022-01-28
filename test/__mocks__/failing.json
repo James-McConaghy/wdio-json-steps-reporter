@@ -14,14 +14,14 @@
             "description": "Navigate to the home page",
             "expectation": "Home page should load",
             "actual": "The home page loaded",
-            "status": "passed",
+            "state": "passed",
             "screenshotPath": "results\\1.0.0\\step-generation\\screenshots\\03214124.png"
         },
         {
             "description": "The title should be correct",
             "expectation": "The title should be correct",
             "actual": "The title was correct",
-            "status": "failed",
+            "state": "failed",
             "screenshotPath": "results\\1.0.0\\step-generation\\screenshots\\12313235.png"
         }
     ],

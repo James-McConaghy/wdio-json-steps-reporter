@@ -4,13 +4,13 @@ const path = require("path")
 const mapHooks = require("./mapHooks")
 const mapTests = require("./mapTests")
 const initResultSet = require("./initResultSet")
-const generateWebReport = require("./generateWebReport")
-const {step, steps} = require("./step")
 const {saveScreenshot, highlight, removeHighlight, removeHighlights} = require("./customCommands")
+const {generateWebReport} = require("./generateWebReport")
+const {step} = require("./step")
 
 class Reporter extends WDIOReporter {
 
-    constructor (options) {
+    constructor(options) {
         options = Object.assign(options)
         super(options)
 
@@ -27,8 +27,8 @@ class Reporter extends WDIOReporter {
         this.testDir = path.normalize(options.testDir || "test/")
         this.fileName = options.logFile
 
-        process.on("step:log", (stepOptions, step) => {
-            this.onStepEvent(stepOptions, step)
+        process.on("step:log", async (stepOptions, step) => {
+            await this.onStepEvent(stepOptions, step)
         })
     }
 
@@ -41,7 +41,8 @@ class Reporter extends WDIOReporter {
             const testResultPath = specName.substring(specName.indexOf(this.testDir) + this.testDir.length, specName.lastIndexOf("."))
             this.resultPath = path.join(this.outputDir, browserName, testResultPath)
             this.screenshotPath = path.join(this.resultPath, "screenshots")
-            fsExtra.ensureDirSync(this.screenshotPath)  
+            fsExtra.ensureDirSync(this.screenshotPath)
+            fsExtra.ensureDirSync("screenshots/")
         }
     }
 
@@ -71,19 +72,23 @@ class Reporter extends WDIOReporter {
     onHookEnd(hook) {
         switch (hook.title.split("\"")[1]) {
         case "before all":
+            hook.type = "before all"
             this.beforeAllHooksArray.push(hook)
-            hook.associatedTest = "*"  
+            hook.associatedTest = "*"
             break
         case "before each":
+            hook.type = "before each"
             hook.associatedTest = this.delegatedTest.title
             this.delegatedStepsArray = this.delegatedTest.steps
             break
         case "after each":
+            hook.type = "after each"
             hook.associatedTest = this.delegatedTest.title
             this.delegatedStepsArray = this.delegatedTest.steps
             break
         case "after all":
-            hook.associatedTest = "*"  
+            hook.type = "after all"
+            hook.associatedTest = "*"
             this.afterAllHooksArray.push(hook)
             break
         default:
@@ -97,16 +102,14 @@ class Reporter extends WDIOReporter {
         this.delegatedStepsArray = this.delegatedTest.steps
     }
 
-    onStepEvent(stepOptions, step) {
+    async onStepEvent(stepOptions, step) {
         if (stepOptions.createLog || stepOptions.takeScreenshot) {
             if (stepOptions.takeScreenshot) {
-                step.screenshotPath = path.join(this.screenshotPath, Date.now() + ".png")
-                browser.saveScreenshot(step.screenshotPath, stepOptions.highlightElement)
+                const newScreenshotName = path.join(this.screenshotPath, step.screenshotPath.split("_").pop())
+                fsExtra.moveSync(step.screenshotPath, newScreenshotName, {overwrite: true})
+                step.screenshotPath = newScreenshotName
             }
             this.delegatedStepsArray.push(step)
-        }
-        if (step.error) {
-            throw step.error
         }
     }
 
@@ -122,7 +125,7 @@ class Reporter extends WDIOReporter {
     }
 
     prepareJson(runner) {
-        let resultSet = initResultSet(runner)
+        let resultSet = initResultSet(runner, this.testDir)
 
         for (const specId of Object.keys(runner.specs)) {
             resultSet.specs.push(runner.specs[specId])
@@ -196,11 +199,10 @@ class Reporter extends WDIOReporter {
 
 module.exports = { 
     reporter: Reporter,
-    step,
-    steps,
-    generateWebReport,
-    saveScreenshot,
-    highlight,
-    removeHighlight,
-    removeHighlights
+    step: step,
+    generateWebReport: generateWebReport,
+    saveScreenshot: saveScreenshot,
+    highlight: highlight,
+    removeHighlight: removeHighlight,
+    removeHighlights: removeHighlights
 }

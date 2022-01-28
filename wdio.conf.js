@@ -1,6 +1,6 @@
-const version = require("./package.json").version
 const StepsReporter = require("./src/index")
 const customCommands = require("./src/customCommands")
+//const customCommands = require("./src/customCommands")
 
 exports.config = {
     //
@@ -132,7 +132,7 @@ exports.config = {
         [StepsReporter.reporter, {
             outputDir: "./results/",
             testDir: "./test/",
-            build: 20
+            build: 3
         }]
     ],
  
@@ -184,11 +184,11 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
-    before: function (capabilities, specs) {
-        browser.overwriteCommand("saveScreenshot", customCommands.saveScreenshot)
-        browser.addCommand("highlight", customCommands.highlight, true)
-        browser.addCommand("removeHighlight", customCommands.removeHighlight, true)
-        browser.addCommand("removeHighlights", customCommands.removeHighlights)
+    before: async function (capabilities, specs) {
+        await browser.overwriteCommand("saveScreenshot", customCommands.saveScreenshot)
+        await browser.addCommand("highlight", customCommands.highlight, true)
+        await browser.addCommand("removeHighlight", customCommands.removeHighlight, true)
+        await browser.addCommand("removeHighlights", customCommands.removeHighlights)
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -267,12 +267,12 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
-    onComplete: function(exitCode, config, capabilities, results) {
+    onComplete: async function(exitCode, config, capabilities, results) {
         StepsReporter.generateWebReport({
             reportDir: "./report/",
             resultsDir: "./results/",
             testDir: "./test/",
-            build: 20
+            build: 3
         })
     }
     /**

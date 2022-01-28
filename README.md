@@ -6,9 +6,9 @@
 ## Example Screenshots
 
 
-<img src="https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-dashboard.png" width="900"/>
+<img src="https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/master/example-dashboard.png" width="900"/>
 
-[Highlight example](https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-highlight.png)
+[Highlight example](https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/master/example-highlight.png)
 
 
 ## Setup
@@ -46,11 +46,11 @@ Configure wdio to use the required StepsReporter as a reporter.
 #### Overwrite/Add custom commands to browser and element
 Overwrite and add the commands from the required StepsReporter.
 ```javascript
-    before: function (capabilities, specs) {
-        browser.overwriteCommand("saveScreenshot", StepsReporter.saveScreenshot)
-        browser.addCommand("highlight", StepsReporter.highlight, true)
-        browser.addCommand("removeHighlight", StepsReporter.removeHighlight, true)
-        browser.addCommand("removeHighlights", StepsReporter.removeHighlights)
+    before: async function (capabilities, specs) {
+        await browser.overwriteCommand("saveScreenshot", StepsReporter.saveScreenshot)
+        await browser.addCommand("highlight", StepsReporter.highlight, true)
+        await browser.addCommand("removeHighlight", StepsReporter.removeHighlight, true)
+        await browser.addCommand("removeHighlights", StepsReporter.removeHighlights)
     }
 ```
 
@@ -62,7 +62,7 @@ when utilizing the report dashboard to get the full benefits of it's features
 * @param {string} testDir : The root directory where tests are stored 
 * @param {string | number} build : The version, jenkins build or name that the html report will be generated for
 ```javascript
-    onComplete: function(exitCode, config, capabilities, results) {
+    onComplete: async function(exitCode, config, capabilities, results) {
         StepsReporter.generateWebReport({
             reportDir: "./report/",
             resultsDir: "./results/",
@@ -91,26 +91,26 @@ Import the step function to be used during tests and page object actions
 import { step } from "wdio-json-steps-reporter"
 ...
 
-before(function () {
-    step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", () => {
-        browser.url("https://webdriver.io")
-        page.waitUntilLoaded()
+before(async function() {
+    await step({createLog: true, takeScreenshot: true}, "Navigate to the Home page", "Home page should load", "The Home page loaded", async function() {
+        await browser.url("https://webdriver.io")
+        await page.waitUntilLoaded()
     })
 })
 
-it("should have the correct title", function() {
-    page.verifyPageTitle() //defaults = {createStep: true, takeScreenshot: false}
-    page.verifyPageTitle({createStep: false) // no log will be generated in the report, the tasks will still be executed
-    page.verifyPageTitle({takeScreenshot: true, highlightElement: $(".hero__subtitle")}) //fullpage screenshot, highlighting the title element
-    page.verifyPageTitle({customDescription: "Override the description", customExpectation: "Override the expectation"}))
+it("should have the correct title", async function() {
+    await page.verifyPageTitle() //defaults = {createStep: true, takeScreenshot: false}
+    await page.verifyPageTitle({createStep: false) // no log will be generated in the report, the tasks will still be executed
+    await page.verifyPageTitle({takeScreenshot: true, highlightElement: $(".hero__subtitle")}) //fullpage screenshot, highlighting the title element
+    await page.verifyPageTitle({customDescription: "Override the description", customExpectation: "Override the expectation"}))
 })
 
-verifyPageTitle(stepOptions?: StepOptions): void {
-    step(stepOptions, 
+async verifyPageTitle(stepOptions?: StepOptions): Promise<Step> {
+    return await step(stepOptions, 
         "Verify the page title is correct",
         "The page title should be correct",
-        "The page title was correct", () => {
-        const title = $(".hero__subtitle")
+        "The page title was correct", async function() {
+        const title = await $(".hero__subtitle")
         expect(title).to.equal("Next-gen browser and mobile automation test framework for Node.js")
     })
 }
@@ -123,7 +123,7 @@ Additionally, an element can be passed in to be highlighted in the screenshot.
     type StepOptions = {
         createLog: boolean;
         takeScreenshot: boolean;
-        highlightElement?: WebdriverIO.Element;
+        highlightElement?: ChainablePromiseElement<Promise<WebdriverIO.Element>>;
         customDescription?: string;
         customExpectation?: string;
         customActual?: string;
