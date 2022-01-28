@@ -6,9 +6,9 @@
 ## Example Screenshots
 
 
-<img src="https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-dashboard.png" width="900"/>
+<img src="https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/master/example-dashboard.png" width="900"/>
 
-[Highlight example](https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/feature/html-report/example-highlight.png)
+[Highlight example](https://raw.githubusercontent.com/James-McConaghy/wdio-json-steps-reporter/master/example-highlight.png)
 
 
 ## Setup
