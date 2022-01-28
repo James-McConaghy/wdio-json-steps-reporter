@@ -1,6 +1,6 @@
 {
   "name": "wdio-json-steps-reporter",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "A WebdriverIO plugin. Report step by step results in json format with screenshot support",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
