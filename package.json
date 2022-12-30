@@ -48,7 +48,7 @@
     "chromedriver": "^97.0.0",
     "eslint": "^7.21.0",
     "geckodriver": "^2.0.2",
-    "mocha": "^7.2.0",
+    "mocha": "^10.2.0",
     "wdio-chromedriver-service": "^7.0.0",
     "wdio-geckodriver-service": "^1.1.2",
     "webdriverio": "^7.4.5"
